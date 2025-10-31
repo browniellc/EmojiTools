@@ -5,6 +5,9 @@
 
 A powerful PowerShell module for emoji search, management, and lookup with **automatic Unicode CLDR integration** to keep your emoji dataset always current.
 
+![Emoji Picker](docs/assets/screenshots/emoji-picker-light.png)
+*Interactive browser-based emoji picker with search and category filtering*
+
 ## ✨ Features
 
 - 🔍 **Fuzzy Search**: Find emojis by name or keyword (e.g., "house" → 🏠 🏡)
