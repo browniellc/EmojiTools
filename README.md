@@ -73,6 +73,9 @@ Search-Emoji -Query "house"
 
 Search-Emoji -Query "smile"
 # Returns: 😀 grinning face, 😃 grinning face with big eyes, etc.
+
+# Or use the interactive visual picker
+Show-EmojiPicker
 ```
 
 ## 🔄 Keeping Dataset Current
@@ -236,6 +239,7 @@ Complete documentation is available in the [docs/](docs/) folder:
 
 - **[INDEX.md](docs/INDEX.md)** - Complete documentation index
 - **[QUICKSTART.md](docs/QUICKSTART.md)** - Get started quickly
+- **[EMOJI_PICKER_GUIDE.md](docs/EMOJI_PICKER_GUIDE.md)** - Interactive emoji picker
 - **[AUTO_UPDATE_GUIDE.md](docs/AUTO_UPDATE_GUIDE.md)** - Automatic dataset updates
 - **[HISTORY_GUIDE.md](docs/HISTORY_GUIDE.md)** - Update history tracking
 - **[CACHING_GUIDE.md](docs/CACHING_GUIDE.md)** - High-performance caching

@@ -19,6 +19,7 @@ Detailed guides for specific features:
 ### Core Features
 - **[AUTO_UPDATE_GUIDE.md](AUTO_UPDATE_GUIDE.md)** - Automatic emoji dataset updates
 - **[HISTORY_GUIDE.md](HISTORY_GUIDE.md)** - Update history tracking and change logs
+- **[EMOJI_PICKER_GUIDE.md](EMOJI_PICKER_GUIDE.md)** - Interactive browser-based emoji picker
 - **[ALIASES_GUIDE.md](ALIASES_GUIDE.md)** - Emoji shortcuts and aliases (71 defaults)
 - **[COLLECTIONS_GUIDE.md](COLLECTIONS_GUIDE.md)** - Creating and managing emoji collections
 - **[ANALYTICS_GUIDE.md](ANALYTICS_GUIDE.md)** - Usage statistics and analytics
@@ -35,6 +36,9 @@ Detailed guides for specific features:
 
 **"I want to search for emojis"**
 → Start with [QUICKSTART.md](../QUICKSTART.md), then see [EXAMPLES.ps1](../EXAMPLES.ps1)
+
+**"I want a visual emoji picker"**
+→ Read [EMOJI_PICKER_GUIDE.md](EMOJI_PICKER_GUIDE.md) - Interactive browser-based picker
 
 **"I want to set up shortcuts for my favorite emojis"**
 → Read [ALIASES_GUIDE.md](../ALIASES_GUIDE.md)
