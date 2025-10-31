@@ -1,0 +1,71 @@
+name: Publish to PowerShell Gallery
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches:
+      - master
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PowerShell
+        shell: pwsh
+        run: |
+          $PSVersionTable
+
+      - name: Get module version
+        id: get_version
+        shell: pwsh
+        run: |
+          $manifest = Test-ModuleManifest -Path ./src/EmojiTools.psd1
+          $version = $manifest.Version.ToString()
+          Write-Host "Module version: $version"
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Publish to PowerShell Gallery
+        shell: pwsh
+        run: |
+          Write-Host "Publishing EmojiTools to PowerShell Gallery..."
+          
+          # Verify the module manifest exists
+          $manifestPath = "./src/EmojiTools.psd1"
+          if (-not (Test-Path $manifestPath)) {
+              throw "Module manifest not found at $manifestPath"
+          }
+          
+          # Get module version
+          $manifest = Test-ModuleManifest -Path $manifestPath
+          Write-Host "Module: $($manifest.Name) v$($manifest.Version)"
+          
+          # Publish to PowerShell Gallery
+          try {
+              Publish-Module -Path ./src -NuGetApiKey '${{ secrets.PSGALLERY_API_KEY }}' -Verbose
+              Write-Host "✅ Successfully published to PowerShell Gallery!"
+          }
+          catch {
+              Write-Error "Failed to publish: $_"
+              exit 1
+          }
+
+      - name: Create GitHub Release
+        if: success()
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          body: |
+            Published to PowerShell Gallery
+            
+            Install with: `Install-Module -Name EmojiTools`
+          draft: false
+          prerelease: false
