@@ -67,8 +67,12 @@ Enable-EmojiAutoUpdate -CreateScheduledTask
 
 ### 3. Search for Emojis
 ```powershell
-```powershell
-Enable-EmojiAutoUpdate -CreateScheduledTask
+# Fuzzy search by name or keyword
+Search-Emoji -Query "house"
+# Returns: 🏠 house, 🏡 house with garden
+
+Search-Emoji -Query "smile"
+# Returns: 😀 grinning face, 😃 grinning face with big eyes, etc.
 ```
 
 ## 🔄 Keeping Dataset Current
@@ -310,11 +314,6 @@ The module supports official Unicode CLDR as the primary data source:
 - Register custom remote URLs with `Register-EmojiSource`
 - Support for CSV and JSON formats
 - See [CUSTOM_SOURCES_GUIDE.md](docs/CUSTOM_SOURCES_GUIDE.md)
-
-## 💡 Requirements
-
-- PowerShell 7.0 or higher (cross-platform support)
-- Internet connection (for dataset updates)
 
 ## 🆘 Troubleshooting
 
