@@ -13,6 +13,10 @@ function Export-Emoji {
     .PARAMETER OutputPath
         The path where the exported file will be saved. If not specified, outputs to current directory.
 
+    .PARAMETER Collection
+        Export a specific emoji collection by name or object. When provided, automatically
+        retrieves full emoji data for all emojis in the collection.
+
     .PARAMETER Category
         Filter emojis by category before exporting
 
@@ -43,6 +47,14 @@ function Export-Emoji {
         Exports smiley emojis to HTML with custom title
 
     .EXAMPLE
+        Export-Emoji -Format HTML -Collection "Favorites" -StyleTheme Colorful
+        Exports a saved collection to HTML with colorful theme
+
+    .EXAMPLE
+        Get-EmojiCollection -Name "Developer" | Export-Emoji -Format JSON -OutputPath "dev-emojis.json"
+        Exports a collection via pipeline to JSON
+
+    .EXAMPLE
         Export-Emoji -Format Markdown -Query "heart" -IncludeMetadata
         Exports heart-related emojis to Markdown with metadata
 
@@ -59,6 +71,9 @@ function Export-Emoji {
 
         [Parameter(Mandatory = $false)]
         [string]$OutputPath,
+
+        [Parameter(Mandatory = $false)]
+        [object]$Collection,
 
         [Parameter(Mandatory = $false)]
         [string]$Category,
@@ -99,8 +114,50 @@ function Export-Emoji {
     }
 
     end {
-        # If no pipeline input, get emojis from dataset
-        if (-not $pipelineInput) {
+        $collectionProcessed = $false
+
+        # Handle Collection parameter or pipeline input from Get-EmojiCollection
+        if ($Collection -or ($pipelineInput -and $emojis.Count -gt 0 -and $emojis[0].PSObject.Properties.Name -contains 'Emojis')) {
+            # Determine if it's a collection object or name
+            $collectionObj = $null
+
+            if ($Collection -is [string]) {
+                # Collection name provided, retrieve it
+                $collectionObj = Get-EmojiCollection -Name $Collection
+            }
+            elseif ($Collection) {
+                # Collection object provided
+                $collectionObj = $Collection
+            }
+            elseif ($pipelineInput -and $emojis[0].PSObject.Properties.Name -contains 'Emojis') {
+                # Collection from pipeline
+                $collectionObj = $emojis[0]
+            }
+
+            if ($collectionObj) {
+                # Load all emoji data
+                $datasetPath = Join-Path $PSScriptRoot "..\data\emoji.csv"
+                if (-not (Test-Path $datasetPath)) {
+                    Write-Error "Emoji dataset not found at $datasetPath"
+                    return
+                }
+
+                $allEmojis = Import-Csv -Path $datasetPath -Encoding UTF8
+
+                # Filter to collection emojis
+                $emojis = $allEmojis | Where-Object { $collectionObj.Emojis -contains $_.emoji }
+
+                # Use collection name as title if not specified
+                if ($Title -eq "Emoji Collection" -and $collectionObj.Name) {
+                    $Title = $collectionObj.Name
+                }
+
+                $collectionProcessed = $true
+            }
+        }
+
+        # If no pipeline input and no collection, get emojis from dataset
+        if (-not $pipelineInput -and -not $collectionProcessed) {
             $datasetPath = Join-Path $PSScriptRoot "..\data\emoji.csv"
 
             if (-not (Test-Path $datasetPath)) {
@@ -188,7 +245,8 @@ function Export-ToJSON {
                 }
             }
         }
-    } else {
+    }
+    else {
         $Emojis | ForEach-Object {
             @{
                 emoji = $_.emoji

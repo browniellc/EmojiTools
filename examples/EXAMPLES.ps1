@@ -133,6 +133,18 @@ Export-Emoji -Format HTML -Title "My Emoji Collection" -StyleTheme Light -Includ
 $results = Search-Emoji "animal"
 $results | Export-Emoji -Format Markdown -Title "Animal Emojis" -OutputPath "animals.md"
 
+# Export a collection (simple approach - NEW in v1.15.0)
+Export-Emoji -Collection "Favorites" -Format HTML -StyleTheme Colorful -OutputPath "favorites.html"
+
+# Export collection via pipeline
+Get-EmojiCollection -Name "Developer" | Export-Emoji -Format JSON -OutputPath "developer-emojis.json"
+
+# Export multiple collections to separate files
+Get-EmojiCollection | ForEach-Object {
+    $name = $_.Name
+    Export-Emoji -Collection $name -Format HTML -OutputPath "$name.html"
+}
+
 ## Example 12: Security demonstration
 # These will be rejected by the Emoji dispatcher:
 # Emoji Search "test; Remove-Item"  # ❌ Blocked - contains semicolon

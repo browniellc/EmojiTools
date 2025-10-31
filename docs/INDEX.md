@@ -20,6 +20,7 @@ Detailed guides for specific features:
 - **[AUTO_UPDATE_GUIDE.md](AUTO_UPDATE_GUIDE.md)** - Automatic emoji dataset updates
 - **[HISTORY_GUIDE.md](HISTORY_GUIDE.md)** - Update history tracking and change logs
 - **[EMOJI_PICKER_GUIDE.md](EMOJI_PICKER_GUIDE.md)** - Interactive browser-based emoji picker
+- **[EXPORT_GUIDE.md](EXPORT_GUIDE.md)** - Export emojis to JSON, HTML, Markdown, and CSV
 - **[ALIASES_GUIDE.md](ALIASES_GUIDE.md)** - Emoji shortcuts and aliases (71 defaults)
 - **[COLLECTIONS_GUIDE.md](COLLECTIONS_GUIDE.md)** - Creating and managing emoji collections
 - **[ANALYTICS_GUIDE.md](ANALYTICS_GUIDE.md)** - Usage statistics and analytics
@@ -39,6 +40,9 @@ Detailed guides for specific features:
 
 **"I want a visual emoji picker"**
 → Read [EMOJI_PICKER_GUIDE.md](EMOJI_PICKER_GUIDE.md) - Interactive browser-based picker
+
+**"I want to export emojis to HTML/JSON/etc"**
+→ Read [EXPORT_GUIDE.md](EXPORT_GUIDE.md) - Multiple export formats with examples
 
 **"I want to set up shortcuts for my favorite emojis"**
 → Read [ALIASES_GUIDE.md](../ALIASES_GUIDE.md)

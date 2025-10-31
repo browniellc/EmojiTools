@@ -196,6 +196,26 @@ Update-EmojiDataset -Force
 Update-EmojiDataset -Url "https://example.com/emojis.csv"
 ```
 
+### Export Emojis
+```powershell
+# Export to interactive HTML
+Export-Emoji -Format HTML -OutputPath "emojis.html"
+
+# Export to JSON for applications
+Export-Emoji -Format JSON -OutputPath "emojis.json"
+
+# Export to Markdown for documentation
+Export-Emoji -Format Markdown -OutputPath "emojis.md"
+
+# Export with dark theme and filters
+Export-Emoji -Format HTML -StyleTheme Dark -Category "Food & Drink" -OutputPath "food.html"
+
+# Export a saved collection
+Export-Emoji -Format HTML -Collection "Favorites" -StyleTheme Colorful -OutputPath "favorites.html"
+```
+
+**See [EXPORT_GUIDE.md](docs/EXPORT_GUIDE.md) for complete details and examples.**
+
 For more examples, see [QUICKSTART.md](docs/QUICKSTART.md) and [examples/EXAMPLES.ps1](examples/EXAMPLES.ps1).
 
 ## 📁 Module Structure
@@ -243,6 +263,7 @@ Complete documentation is available in the [docs/](docs/) folder:
 - **[INDEX.md](docs/INDEX.md)** - Complete documentation index
 - **[QUICKSTART.md](docs/QUICKSTART.md)** - Get started quickly
 - **[EMOJI_PICKER_GUIDE.md](docs/EMOJI_PICKER_GUIDE.md)** - Interactive emoji picker
+- **[EXPORT_GUIDE.md](docs/EXPORT_GUIDE.md)** - Export to JSON, HTML, Markdown, CSV
 - **[AUTO_UPDATE_GUIDE.md](docs/AUTO_UPDATE_GUIDE.md)** - Automatic dataset updates
 - **[HISTORY_GUIDE.md](docs/HISTORY_GUIDE.md)** - Update history tracking
 - **[CACHING_GUIDE.md](docs/CACHING_GUIDE.md)** - High-performance caching
@@ -355,7 +376,7 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 
 ## 📊 Version
 
-**Current Version:** 1.14.0
-**Last Updated:** October 30, 2025
+**Current Version:** 1.15.0
+**Last Updated:** October 31, 2025
 
 See [CHANGELOG.md](CHANGELOG.md) for complete version history.

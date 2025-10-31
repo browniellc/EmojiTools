@@ -80,11 +80,70 @@ $testDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Load EmojiTools module
 Write-Host "`n📦 Loading EmojiTools module..." -ForegroundColor Yellow
-Remove-Module EmojiTools -Force -ErrorAction SilentlyContinue
-$modulePath = Join-Path (Split-Path $testDir -Parent) "src\EmojiTools.psd1"
-Import-Module $modulePath -Force
-$module = Get-Module EmojiTools
-Write-Host "   ✅ EmojiTools v$($module.Version) loaded`n" -ForegroundColor Green
+
+# CRITICAL: Remove ALL instances of EmojiTools to avoid conflicts
+# This prevents issues when both installed (PSGallery) and dev versions exist
+$existingModules = Get-Module EmojiTools -All
+if ($existingModules) {
+    Write-Host "   ℹ️  Removing $($existingModules.Count) existing module instance(s)..." -ForegroundColor Yellow
+    Remove-Module EmojiTools -Force -ErrorAction SilentlyContinue
+}
+
+# Check for installed versions that might auto-load
+$installedVersions = Get-Module EmojiTools -ListAvailable
+if ($installedVersions.Count -gt 1) {
+    Write-Host "   ℹ️  Multiple EmojiTools versions found in PSModulePath:" -ForegroundColor Yellow
+    foreach ($ver in $installedVersions) {
+        $indicator = if ($ver.Path -like "*_brownie*") { " (DEV)" } else { "" }
+        Write-Host "      - v$($ver.Version): $($ver.ModuleBase)$indicator" -ForegroundColor Gray
+    }
+}
+
+# Import the development version explicitly using full path
+# Using -Global scope to ensure single instance across all nested contexts
+$modulePath = Resolve-Path (Join-Path (Split-Path $testDir -Parent) "src\EmojiTools.psd1")
+Write-Host "   📂 Loading from: $modulePath" -ForegroundColor Gray
+
+try {
+    # Import with -Global to ensure it's loaded in global scope and accessible to Pester
+    Import-Module $modulePath -Force -Global -DisableNameChecking -ErrorAction Stop
+
+    # Verify only ONE instance is loaded
+    $loadedModules = @(Get-Module EmojiTools -All)
+
+    if ($loadedModules.Count -eq 0) {
+        throw "Failed to load EmojiTools module"
+    }
+    elseif ($loadedModules.Count -gt 1) {
+        Write-Host "   ⚠️  WARNING: $($loadedModules.Count) module instances loaded!" -ForegroundColor Red
+        Write-Host "   This may cause 'EmojiTools EmojiTools' errors in tests." -ForegroundColor Red
+        Write-Host "   Paths loaded:" -ForegroundColor Yellow
+        foreach ($m in $loadedModules) {
+            Write-Host "      - $($m.Path)" -ForegroundColor Gray
+        }
+        Write-Host "   Attempting to remove non-dev instances..." -ForegroundColor Yellow
+
+        # Keep only the dev version
+        foreach ($m in $loadedModules) {
+            if ($m.Path -notlike "*_brownie*") {
+                Remove-Module $m -Force -ErrorAction SilentlyContinue
+                Write-Host "      ✓ Removed: $($m.Path)" -ForegroundColor Gray
+            }
+        }
+
+        $loadedModules = @(Get-Module EmojiTools -All)
+    }
+
+    $module = $loadedModules[0]
+    Write-Host "   ✅ EmojiTools v$($module.Version) loaded successfully" -ForegroundColor Green
+    Write-Host "      Path: $($module.Path)" -ForegroundColor Gray
+    Write-Host "      Module count: $($loadedModules.Count)" -ForegroundColor Gray
+    Write-Host ""
+}
+catch {
+    Write-Host "   ❌ Failed to load module: $_" -ForegroundColor Red
+    exit 1
+}
 
 # Configure Pester
 $pesterConfig = New-PesterConfiguration

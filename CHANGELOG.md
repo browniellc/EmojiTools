@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.0] - 2025-10-31
+
+### Added
+- **Collection Export Support** - New `-Collection` parameter in `Export-Emoji`
+  - Export emoji collections directly by name or object
+  - Automatically retrieves full emoji data for all collection members
+  - Auto-sets title to collection name when not specified
+  - Supports both parameter and pipeline input from `Get-EmojiCollection`
+  - Simplifies collection export from complex manual filtering to one-line commands
+
+### Changed
+- **Export Guide Documentation** - Updated with collection export examples
+  - Added "Simple Approach (Recommended)" showing new `-Collection` parameter usage
+  - Reorganized examples with beginner-friendly one-liners first
+  - Retained "Advanced Approach (Manual)" for users needing custom filtering
+  - Added explanatory notes about collections storing emoji characters vs. full data
+
+### Fixed
+- **Multi-Language Test Compatibility** - Resolved module loading conflicts
+  - Fixed "EmojiTools EmojiTools" error when multiple module instances loaded
+  - Enhanced `Run-AllTests.ps1` to handle installed vs. development versions
+  - Added smart import logic in multi-language tests for scriptblock execution
+  - Documented why this test requires special handling (internal state access)
+
 ## [1.14.0] - 2025-10-30
 
 **Note:** Version 1.15.0 features are in development. Module is currently at version 1.14.0.
