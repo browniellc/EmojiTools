@@ -1,0 +1,53 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto
+
+# PowerShell scripts - use LF for cross-platform compatibility
+*.ps1 text eol=lf
+*.psm1 text eol=lf
+*.psd1 text eol=lf
+*.ps1xml text eol=lf
+
+# Markdown files
+*.md text eol=lf
+
+# JSON files
+*.json text eol=lf
+
+# CSV files
+*.csv text eol=lf
+
+# YAML files
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Shell scripts
+*.sh text eol=lf
+
+# Batch files
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Documentation
+*.txt text eol=lf
+LICENSE text eol=lf
+
+# Archives (binary)
+*.zip binary
+*.7z binary
+*.gz binary
+*.tar binary
+*.nupkg binary
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+
+# Fonts
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary

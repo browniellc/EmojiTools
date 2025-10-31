@@ -1,0 +1,162 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }} - PowerShell ${{ matrix.psversion }}
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+        psversion: ['7.x']
+        # Note: PowerShell 5.1 support removed due to parser compatibility issues
+        # The module requires PowerShell 7.0 or later
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Display PowerShell version
+      shell: pwsh
+      run: |
+        Write-Host "PowerShell Version:"
+        $PSVersionTable
+        Write-Host "`nPowerShell Edition: $($PSVersionTable.PSEdition)"
+        Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
+    
+    - name: Install Pester
+      shell: pwsh
+      run: |
+        if (Test-Path './tests') {
+          Install-Module -Name Pester -MinimumVersion 5.0 -Force -SkipPublisherCheck
+          Get-Module Pester -ListAvailable
+        }
+    
+    - name: Test module import
+      shell: pwsh
+      run: |
+        Import-Module ./src/EmojiTools.psd1 -Force
+        Get-Module EmojiTools
+    
+    - name: Test basic functionality
+      shell: pwsh
+      run: |
+        Import-Module ./src/EmojiTools.psd1 -Force
+        
+        # Test Get-Emoji (returns all emojis)
+        $allEmojis = Get-Emoji -Limit 10
+        if ($allEmojis.Count -eq 0) { throw "Get-Emoji failed" }
+        Write-Host "✓ Get-Emoji works ($($allEmojis.Count) emojis returned)"
+        
+        # Test Search-Emoji
+        $results = Search-Emoji -Query "smile" -Limit 5
+        if ($results.Count -eq 0) { throw "Search-Emoji failed" }
+        Write-Host "✓ Search-Emoji works ($($results.Count) results found)"
+        
+        # Test Get-EmojiDatasetInfo (displays info, doesn't return object)
+        Get-EmojiDatasetInfo
+        Write-Host "✓ Get-EmojiDatasetInfo works"
+        
+        Write-Host "✓ All basic tests passed"
+    
+    - name: Run Pester tests
+      shell: pwsh
+      run: |
+        if (Test-Path './tests') {
+          Import-Module Pester -MinimumVersion 5.0
+          $config = New-PesterConfiguration
+          $config.Run.Path = './tests'
+          $config.Run.Exit = $true
+          $config.CodeCoverage.Enabled = $false
+          $config.TestResult.Enabled = $true
+          $config.TestResult.OutputPath = './testResults.xml'
+          Invoke-Pester -Configuration $config
+        } else {
+          Write-Host "No tests directory found, skipping Pester tests"
+        }
+    
+    - name: Upload test results
+      if: always() && hashFiles('./tests/**/*.ps1') != ''
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.os }}-ps${{ matrix.psversion }}
+        path: ./testResults.xml
+
+  lint:
+    name: PowerShell Script Analyzer
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Install PSScriptAnalyzer
+      shell: pwsh
+      run: |
+        Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck
+    
+    - name: Run PSScriptAnalyzer
+      shell: pwsh
+      run: |
+        $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
+        
+        if ($results) {
+          $results | Format-Table RuleName, Severity, ScriptName, Line, Message -AutoSize
+          Write-Error "PSScriptAnalyzer found $($results.Count) issue(s)"
+          exit 1
+        } else {
+          Write-Host "✓ PSScriptAnalyzer found no issues"
+        }
+
+  publish-readiness:
+    name: Check PowerShell Gallery Readiness
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Validate module manifest
+      shell: pwsh
+      run: |
+        $manifest = Test-ModuleManifest -Path ./src/EmojiTools.psd1
+        Write-Host "Module: $($manifest.Name)"
+        Write-Host "Version: $($manifest.Version)"
+        Write-Host "Author: $($manifest.Author)"
+        Write-Host "GUID: $($manifest.Guid)"
+        Write-Host "Functions: $($manifest.ExportedFunctions.Count)"
+        
+        # Check required fields for PSGallery
+        if (-not $manifest.Author) { throw "Author is required" }
+        if (-not $manifest.Description) { throw "Description is required" }
+        if (-not $manifest.ProjectUri) { Write-Warning "ProjectUri is recommended" }
+        if (-not $manifest.LicenseUri) { Write-Warning "LicenseUri is recommended" }
+        
+        Write-Host "✓ Module manifest is valid"
+    
+    - name: Check for required files
+      shell: pwsh
+      run: |
+        $required = @('README.md', 'LICENSE', 'CHANGELOG.md')
+        $missing = @()
+        
+        foreach ($file in $required) {
+          if (-not (Test-Path $file)) {
+            $missing += $file
+          }
+        }
+        
+        if ($missing) {
+          Write-Error "Missing required files: $($missing -join ', ')"
+          exit 1
+        }
+        
+        Write-Host "✓ All required files present"

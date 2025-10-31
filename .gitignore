@@ -1,0 +1,95 @@
+# EmojiTools - PowerShell Module
+
+# Build artifacts
+bin/
+obj/
+*.nupkg
+*.zip
+
+# Module output
+output/
+publish/
+
+# Test results
+TestResults/
+*.trx
+coverage/
+
+# PowerShell specific
+*.ps1xml
+!*.Format.ps1xml
+!*.Types.ps1xml
+
+# Data files that shouldn't be committed (user-generated)
+src/data/.setup-complete
+src/data/aliases.json
+src/data/collections.json
+src/data/history.json
+src/data/stats.json
+src/data/emoji-backup-*.csv
+
+src/data/languages/
+
+# Keep the example/template data files
+!src/data/emoji.csv
+!src/data/metadata.json
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vs/
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Backup files
+*.bak
+*.backup
+*~
+*.swp
+*.swo
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+
+# Node modules (if using any JS tools)
+node_modules/
+
+# Python (if using any Python tools)
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+ENV/
+
+# Archive files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Sensitive data
+.env
+.env.local
+secrets.json
+*.key
+*.pem
+
