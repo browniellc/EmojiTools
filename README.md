@@ -1,5 +1,8 @@
 # EmojiTools PowerShell Module
 
+[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/EmojiTools)](https://www.powershellgallery.com/packages/EmojiTools)
+[![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/EmojiTools)](https://www.powershellgallery.com/packages/EmojiTools)
+
 A powerful PowerShell module for emoji search, management, and lookup with **automatic Unicode CLDR integration** to keep your emoji dataset always current.
 
 ## ✨ Features
@@ -19,50 +22,51 @@ A powerful PowerShell module for emoji search, management, and lookup with **aut
 - 📝 **Aliases & Collections**: Create shortcuts and organize emoji sets
 - 📈 **Analytics**: Track usage statistics
 
-## 🚀 Quick Start
+## � Installation
 
-### 1. Import Module
+### From PowerShell Gallery (Recommended)
+
 ```powershell
+# Install the module
+Install-Module -Name EmojiTools -Scope CurrentUser
+
+# Import the module
+Import-Module EmojiTools
+```
+
+**PowerShell Gallery:** [https://www.powershellgallery.com/packages/EmojiTools](https://www.powershellgallery.com/packages/EmojiTools)
+
+### From Source
+
+```powershell
+# Clone the repository
+git clone https://github.com/browniellc/EmojiTools.git
+cd EmojiTools
+
+# Import the module
 Import-Module .\src\EmojiTools.psd1
 ```
-
-### 2. Get Latest Emojis (Recommended First Step)
-```powershell
-# Download 1,900+ emojis from Unicode CLDR
-Update-EmojiDataset -Source Unicode
-```
-
-### 3. Enable Auto-Updates (Set It & Forget It!)
-```powershell
-# Check for updates weekly + create cross-platform scheduled task
-Enable-EmojiAutoUpdate -CreateScheduledTask
-```
-
-## 📦 Installation
 
 ### Prerequisites
 - PowerShell 7.0 or higher (cross-platform support)
 - Internet connection (for dataset updates)
 
-### Quick Install
+## 🚀 Quick Start
 
-1. **Clone or download the repository**
+### 1. Get Latest Emojis (Recommended First Step)
 ```powershell
-git clone https://github.com/browniellc/EmojiTools.git
-cd EmojiTools
-```
-
-2. **Import the module:**
-```powershell
-Import-Module .\src\EmojiTools.psd1
-```
-
-3. **Download emoji data from Unicode CLDR (recommended):**
-```powershell
+# Download 1,900+ emojis from Unicode CLDR
 Update-EmojiDataset -Source Unicode
 ```
 
-4. **Enable auto-updates (optional but recommended):**
+### 2. Enable Auto-Updates (Set It & Forget It!)
+```powershell
+# Check for updates weekly + create cross-platform scheduled task
+Enable-EmojiAutoUpdate -CreateScheduledTask
+```
+
+### 3. Search for Emojis
+```powershell
 ```powershell
 Enable-EmojiAutoUpdate -CreateScheduledTask
 ```
