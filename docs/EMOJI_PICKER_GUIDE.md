@@ -4,6 +4,9 @@
 
 The `Show-EmojiPicker` function provides an interactive, browser-based emoji picker with real-time search, category filtering, and clipboard integration.
 
+![Emoji Picker - Light Theme](assets/screenshots/emoji-picker-light.png)
+*Interactive emoji picker with light theme*
+
 ## Features
 
 - 🎨 **Modern UI** - Clean, responsive interface with light/dark themes
@@ -69,6 +72,9 @@ Show-EmojiPicker -Theme Light
 Show-EmojiPicker -Theme Dark
 ```
 
+![Emoji Picker - Dark Theme](assets/screenshots/emoji-picker-dark.png)
+*Dark theme for comfortable night-time use*
+
 ## Standalone Mode
 
 Standalone mode opens the picker as a static HTML page without requiring a PowerShell HTTP server.
@@ -132,55 +138,19 @@ While the picker is open:
 
 ## Screenshots
 
-To capture screenshots of the emoji picker:
+![Emoji Picker - Search](assets/screenshots/emoji-picker-search.png)
+*Real-time search filtering as you type*
 
-### Method 1: Using Windows Snipping Tool (Windows)
+![Emoji Picker - Categories](assets/screenshots/emoji-picker-categories.png)
+*Browse emojis by category*
 
-```powershell
-# Open the picker
-Show-EmojiPicker -Theme Light
+### Recommended Screenshots to Create
 
-# Then press: Win + Shift + S
-# Select the area to capture
-```
-
-### Method 2: Using PowerShell + Browser DevTools
-
-```powershell
-# Open picker in standalone mode
-Show-EmojiPicker -Standalone -Theme Dark
-
-# In browser:
-# Press F12 -> Console -> Run:
-# await new Promise(r => setTimeout(r, 500)); 
-# Then use browser's built-in screenshot (F12 -> Device toolbar -> Screenshot)
-```
-
-### Method 3: macOS Screenshot
-
-```powershell
-# Open the picker
-Show-EmojiPicker -Theme Auto
-
-# Press: Cmd + Shift + 4
-# Drag to select area
-```
-
-### Method 4: Automated with Selenium (Advanced)
-
-For automated screenshot generation:
-
-```powershell
-# Install Selenium module
-Install-Module Selenium -Scope CurrentUser
-
-# Generate screenshot
-$driver = Start-SeChrome -Headless
-$driver.Navigate().GoToUrl("http://localhost:8321")
-Start-Sleep -Seconds 2
-$driver.GetScreenshot().SaveAsFile("emoji-picker.png")
-$driver.Quit()
-```
+For complete documentation coverage:
+1. **Light theme** - `emoji-picker-light.png`
+2. **Dark theme** - `emoji-picker-dark.png`
+3. **Search active** - `emoji-picker-search.png`
+4. **Category filter** - `emoji-picker-categories.png`
 
 ## Troubleshooting
 
