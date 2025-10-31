@@ -1,12 +1,9 @@
 name: Publish to PowerShell Gallery
 
 on:
-  workflow_run:
-    workflows: ["CI"]
-    types:
-      - completed
-    branches:
-      - master
+  push:
+    tags:
+      - 'v*.*.*'  # Trigger on version tags like v1.15.0
   workflow_dispatch:  # Allow manual trigger
 
 permissions:
@@ -15,7 +12,6 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     
     steps:
       - name: Checkout code
@@ -58,8 +54,19 @@ jobs:
           $manifest = Test-ModuleManifest -Path $manifestPath
           Write-Host "Module: $($manifest.Name) v$($manifest.Version)"
           
+          # Check if this version is already published
+          Write-Host "Checking if version $($manifest.Version) is already published..."
+          $publishedModule = Find-Module -Name EmojiTools -RequiredVersion $manifest.Version -ErrorAction SilentlyContinue
+          
+          if ($publishedModule) {
+              Write-Host "⏭️  Version $($manifest.Version) is already published to PowerShell Gallery. Skipping publish."
+              Write-Host "   Published on: $($publishedModule.PublishedDate)"
+              exit 0
+          }
+          
           # Publish to PowerShell Gallery
           try {
+              Write-Host "📦 Publishing version $($manifest.Version) to PowerShell Gallery..."
               Publish-Module -Path $moduleDir -NuGetApiKey '${{ secrets.PSGALLERY_API_KEY }}' -Verbose
               Write-Host "✅ Successfully published to PowerShell Gallery!"
           }
