@@ -55,6 +55,32 @@ BeforeAll {
     if ($EmojiToolsConfig.CurrentLanguage -ne 'en') {
         Set-EmojiLanguage -Language en | Out-Null
     }
+
+    # Mock GitHub API calls to avoid rate limits in CI
+    Mock -ModuleName EmojiTools Invoke-RestMethod {
+        param($Uri)
+        
+        # Mock response for language list API
+        if ($Uri -like "*unicode-org/cldr-json*") {
+            return @(
+                @{ type = 'dir'; name = 'en' }
+                @{ type = 'dir'; name = 'es' }
+                @{ type = 'dir'; name = 'fr' }
+                @{ type = 'dir'; name = 'de' }
+                @{ type = 'dir'; name = 'ja' }
+                @{ type = 'dir'; name = 'zh' }
+                @{ type = 'file'; name = 'README.md' }
+            )
+        }
+        
+        # If it's a specific language download, return mock emoji data
+        return @{
+            content = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(@"
+emoji,description,category,aliases,tags,unicode_version
+😀,grinning face,Smileys & Emotion,grinning,smile happy,1.0
+"@))
+        }
+    }
 }
 
 Describe "EmojiTools Multi-Language Support" -Tag 'MultiLanguage' {
