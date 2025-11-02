@@ -3,7 +3,7 @@
     RootModule = 'EmojiTools.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.15.0'
+    ModuleVersion = '1.16.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -118,6 +118,22 @@
 
             # ReleaseNotes of this module
             ReleaseNotes = @'
+# Version 1.16.0 (2025-11-02)
+- 🎨 Module Icon/Logo - Professional branding for PowerShell Gallery
+- ✨ PowerShell Best Practices - 54+ Write-Host replacements with proper streams
+- 🏷️ Enhanced Discoverability - 5 new Gallery tags, HelpInfoUri added
+- ✅ Code Quality - Zero PSScriptAnalyzer violations, 109/109 tests passing
+
+# Version 1.15.0 (2025-10-31)
+- 📦 Collection Export Support - New -Collection parameter in Export-Emoji
+- 📖 Export Guide Documentation - Updated with collection examples
+- 🔧 Multi-Language Test Compatibility - Fixed module loading conflicts
+
+# Version 1.14.0 (2025-10-30)
+- 🌍 Cross-Platform Scheduled Task Support (Windows, Linux, macOS)
+- ⏰ New-EmojiScheduledTask, Remove-EmojiScheduledTask functions
+- 🔍 Test-EmojiScheduledTask, Get-EmojiPlatform functions
+
 # Version 1.11.0 (2025-10-30)
 - 🚀 High-Performance Caching System (Phase 1-3 Complete!)
 - ⚡ Query Result Cache with LRU eviction and configurable TTL

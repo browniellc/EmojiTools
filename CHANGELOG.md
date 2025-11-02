@@ -7,6 +7,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.16.0] - 2025-11-02
+
+### Added
+- **Module Icon/Logo** - Professional branding for PowerShell Gallery
+  - Added 1024x1024 PNG logo (`EmojiTools.png`)
+  - Configured IconUri in module manifest for Gallery display
+  - Centered logo display in README with badges
+
+### Changed
+- **PowerShell Best Practices** - Enhanced code quality and automation-friendliness
+  - Replaced 54+ `Write-Host` calls with proper PowerShell streams
+  - Use `Write-Information` for informational messages (with `-InformationAction Continue`)
+  - Use `Write-Warning` for warnings and important notices
+  - Use `Write-Verbose` for detailed diagnostic output
+  - Improved scriptability and pipeline compatibility
+  - Updated files: EmojiTools.psm1, Update-EmojiDataset.ps1, Show-EmojiPicker.ps1, Analytics.ps1, Collections.ps1, AutoUpdate.ps1, Setup.ps1
+- **Module Discoverability** - Enhanced PowerShell Gallery metadata
+  - Added 5 new tags: 'CLDR', 'Cross-Platform', 'PSEdition_Core', 'Clipboard', 'Picker'
+  - Added HelpInfoUri pointing to documentation index
+  - Improved module description and searchability
+
+### Fixed
+- **Code Quality** - All PSScriptAnalyzer violations resolved
+  - Zero errors, zero warnings across entire codebase
+  - Maintained formatted output for analytics displays
+  - All 109 core tests passing (100% success rate)
+
 ## [1.15.0] - 2025-10-31
 
 ### Added
