@@ -65,9 +65,9 @@ function New-EmojiCollection {
     # Save collections
     $collections | ConvertTo-Json -Depth 10 | Set-Content $collectionsPath -Encoding UTF8
 
-    Write-Host "✅ Created collection '$Name'" -ForegroundColor Green
+    Write-Information "✅ Created collection '$Name'" -InformationAction Continue
     if ($Emojis.Count -gt 0) {
-        Write-Host "   Added $($Emojis.Count) emoji(s): $($Emojis -join ' ')" -ForegroundColor Cyan
+        Write-Information "   Added $($Emojis.Count) emoji(s): $($Emojis -join ' ')" -InformationAction Continue
     }
 }
 
@@ -135,10 +135,10 @@ function Add-EmojiToCollection {
             $collections[$Collection].modified = (Get-Date).ToString("yyyy-MM-dd")
             $collections | ConvertTo-Json -Depth 10 | Set-Content $collectionsPath -Encoding UTF8
 
-            Write-Host "✅ Added $($added.Count) emoji(s) to '$Collection': $($added -join ' ')" -ForegroundColor Green
+            Write-Information "✅ Added $($added.Count) emoji(s) to '$Collection': $($added -join ' ')" -InformationAction Continue
         }
         else {
-            Write-Host "ℹ️  No new emojis added (already in collection)" -ForegroundColor Yellow
+            Write-Information "ℹ️  No new emojis added (already in collection)" -InformationAction Continue
         }
     }
 }
@@ -203,10 +203,10 @@ function Remove-EmojiFromCollection {
         $collections[$Collection].modified = (Get-Date).ToString("yyyy-MM-dd")
         $collections | ConvertTo-Json -Depth 10 | Set-Content $collectionsPath -Encoding UTF8
 
-        Write-Host "✅ Removed $($removed.Count) emoji(s) from '$Collection': $($removed -join ' ')" -ForegroundColor Green
+        Write-Information "✅ Removed $($removed.Count) emoji(s) from '$Collection': $($removed -join ' ')" -InformationAction Continue
     }
     else {
-        Write-Host "ℹ️  No emojis removed (not found in collection)" -ForegroundColor Yellow
+        Write-Information "ℹ️  No emojis removed (not found in collection)" -InformationAction Continue
     }
 }
 
@@ -362,7 +362,7 @@ function Remove-EmojiCollection {
     $collections.Remove($Name)
     $collections | ConvertTo-Json -Depth 10 | Set-Content $collectionsPath -Encoding UTF8
 
-    Write-Host "✅ Removed collection '$Name'" -ForegroundColor Green
+    Write-Information "✅ Removed collection '$Name'" -InformationAction Continue
 }
 
 function Export-EmojiCollection {

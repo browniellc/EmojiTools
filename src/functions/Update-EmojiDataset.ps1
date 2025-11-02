@@ -105,7 +105,7 @@ function Update-EmojiDataset {
     # Handle URL parameter set
     if ($PSCmdlet.ParameterSetName -eq 'Url') {
         if (-not $Silent) {
-            Write-Host "🔄 Downloading emoji dataset from URL..." -ForegroundColor Cyan
+            Write-Information "🔄 Downloading emoji dataset from URL..." -InformationAction Continue
         }
 
         # Auto-detect format from URL if not specified
@@ -164,7 +164,7 @@ function Update-EmojiDataset {
                 $metadata | ConvertTo-Json | Set-Content $metadataPath -Encoding UTF8
 
                 if (-not $Silent) {
-                    Write-Host "✅ Successfully downloaded $($csvData.Count) emojis from URL" -ForegroundColor Green
+                    Write-Information "✅ Successfully downloaded $($csvData.Count) emojis from URL" -InformationAction Continue
                 }
 
                 # Save update history
@@ -190,7 +190,7 @@ function Update-EmojiDataset {
             $customSource = $registry.custom_sources | Where-Object { $_.name -eq $Source }
             if ($customSource) {
                 if (-not $Silent) {
-                    Write-Host "🔄 Updating from custom source '$Source'..." -ForegroundColor Cyan
+                    Write-Information "🔄 Updating from custom source '$Source'..." -InformationAction Continue
                 }
 
                 # Update usage statistics
@@ -219,7 +219,7 @@ function Update-EmojiDataset {
     }
 
     if (-not $Silent) {
-        Write-Host "🔄 Updating emoji dataset from $Source..." -ForegroundColor Cyan
+        Write-Information "🔄 Updating emoji dataset from $Source..." -InformationAction Continue
     }
 
     if (-not $PSCmdlet.ShouldProcess("Emoji dataset", "Update from $Source")) {
@@ -239,11 +239,8 @@ function Update-EmojiDataset {
 
                 if (-not $KaggleApiKey -and -not (Get-Command kaggle -ErrorAction SilentlyContinue)) {
                     Write-Warning "Kaggle API key not found and Kaggle CLI not installed."
-                    Write-Host "Please either:" -ForegroundColor Yellow
-                    Write-Host "  1. Install Kaggle CLI: pip install kaggle" -ForegroundColor Yellow
-                    Write-Host "  2. Provide API key with -KaggleApiKey parameter" -ForegroundColor Yellow
-                    Write-Host "  3. Set KAGGLE_KEY environment variable" -ForegroundColor Yellow
-                    Write-Host "`nFalling back to GitHub source..." -ForegroundColor Yellow
+                    Write-Warning "Please either: 1) Install Kaggle CLI: pip install kaggle, 2) Provide API key with -KaggleApiKey parameter, 3) Set KAGGLE_KEY environment variable"
+                    Write-Warning "Falling back to GitHub source..."
                     Update-EmojiDataset -Source GitHub -Force:$Force
                     return
                 }
@@ -263,7 +260,7 @@ function Update-EmojiDataset {
 
                     if ($csvFile) {
                         Copy-Item $csvFile.FullName -Destination $dataPath -Force
-                        Write-Host "✓ Successfully updated emoji dataset from Kaggle" -ForegroundColor Green
+                        Write-Information "✓ Successfully updated emoji dataset from Kaggle" -InformationAction Continue
                     }
                 }
 
@@ -274,12 +271,12 @@ function Update-EmojiDataset {
             'Unicode' {
                 # Unicode CLDR emoji annotations - Official source
                 if (-not $Silent) {
-                    Write-Host "📥 Downloading from Unicode CLDR (official source)..." -ForegroundColor Yellow
+                    Write-Information "📥 Downloading from Unicode CLDR (official source)..." -InformationAction Continue
                 }
 
                 # Step 1: Download emoji-test.txt for category information
                 if (-not $Silent) {
-                    Write-Host "📥 Downloading emoji categories from Unicode..." -ForegroundColor Yellow
+                    Write-Information "📥 Downloading emoji categories from Unicode..." -InformationAction Continue
                 }
 
                 $emojiTestUrl = "https://unicode.org/Public/emoji/latest/emoji-test.txt"
@@ -345,7 +342,7 @@ function Update-EmojiDataset {
                 }
 
                 if (-not $Silent) {
-                    Write-Host "   Built category map for $($categoryLookup.Count) emojis" -ForegroundColor Green
+                    Write-Verbose "   Built category map for $($categoryLookup.Count) emojis"
                 }
 
                 # Step 2: Download Unicode CLDR annotations for names and keywords
@@ -353,10 +350,10 @@ function Update-EmojiDataset {
 
                 if (-not $Silent) {
                     if ($Language) {
-                        Write-Host "📥 Downloading $targetLang emoji names and keywords from CLDR..." -ForegroundColor Yellow
+                        Write-Information "📥 Downloading $targetLang emoji names and keywords from CLDR..." -InformationAction Continue
                     }
                     else {
-                        Write-Host "📥 Downloading emoji names and keywords from CLDR..." -ForegroundColor Yellow
+                        Write-Information "📥 Downloading emoji names and keywords from CLDR..." -InformationAction Continue
                     }
                 }
 
@@ -415,9 +412,9 @@ function Update-EmojiDataset {
                 $emojiList | Export-Csv -Path $dataPath -NoTypeInformation -Encoding UTF8
 
                 if (-not $Silent) {
-                    Write-Host "✅ Successfully updated emoji dataset from Unicode" -ForegroundColor Green
-                    Write-Host "   Downloaded $($emojiList.Count) emojis" -ForegroundColor Green
-                    Write-Host "   Categorized $categorizedCount emojis" -ForegroundColor Green
+                    Write-Information "✅ Successfully updated emoji dataset from Unicode" -InformationAction Continue
+                    Write-Information "   Downloaded $($emojiList.Count) emojis" -InformationAction Continue
+                    Write-Information "   Categorized $categorizedCount emojis" -InformationAction Continue
                 }
 
                 # Save metadata
@@ -434,7 +431,7 @@ function Update-EmojiDataset {
             'GitHub' {
                 # GitHub emoji list (fallback/simple source)
                 if (-not $Silent) {
-                    Write-Host "📥 Downloading from GitHub emoji database..." -ForegroundColor Yellow
+                    Write-Information "📥 Downloading from GitHub emoji database..." -InformationAction Continue
                 }
                 $githubUrl = "https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json"
 
@@ -454,7 +451,7 @@ function Update-EmojiDataset {
                 $emojiList | Export-Csv -Path $dataPath -NoTypeInformation -Encoding UTF8
 
                 if (-not $Silent) {
-                    Write-Host "✅ Successfully updated emoji dataset from GitHub" -ForegroundColor Green
+                    Write-Information "✅ Successfully updated emoji dataset from GitHub" -InformationAction Continue
                 }
 
                 # Save metadata
@@ -471,7 +468,7 @@ function Update-EmojiDataset {
         # Reload the data
         $Script:EmojiData = Import-Csv $dataPath -Encoding UTF8
         if (-not $Silent) {
-            Write-Host "✅ Loaded $($Script:EmojiData.Count) emojis into memory" -ForegroundColor Green
+            Write-Information "✅ Loaded $($Script:EmojiData.Count) emojis into memory" -InformationAction Continue
         }
 
         # Save update history

@@ -45,12 +45,12 @@ function Initialize-EmojiTools {
     $setupPath = $Script:EmojiToolsConfig.SetupCompletePath
 
     if ((Test-Path $setupPath) -and -not $Force) {
-        Write-Host "✅ EmojiTools is already initialized." -ForegroundColor Green
-        Write-Host "   Use -Force to re-initialize and overwrite existing data." -ForegroundColor Yellow
+        Write-Information "✅ EmojiTools is already initialized." -InformationAction Continue
+        Write-Information "   Use -Force to re-initialize and overwrite existing data." -InformationAction Continue
         return
     }
 
-    Write-Host "`n🎉 Initializing EmojiTools..." -ForegroundColor Cyan
+    Write-Information "`n🎉 Initializing EmojiTools..." -InformationAction Continue
 
     $initialized = @()
 
@@ -58,19 +58,19 @@ function Initialize-EmojiTools {
         # Initialize default collections
         if (-not $SkipCollections) {
             if (Get-Command Initialize-EmojiCollections -ErrorAction SilentlyContinue) {
-                Write-Host "   📁 Creating default emoji collections..." -ForegroundColor Gray
+                Write-Verbose "   📁 Creating default emoji collections..."
                 Initialize-EmojiCollections -ErrorAction SilentlyContinue
                 $initialized += "Collections"
             }
         }
         else {
-            Write-Host "   ⏭️  Skipping collections (as requested)" -ForegroundColor Gray
+            Write-Verbose "   ⏭️  Skipping collections (as requested)"
         }
 
         # Initialize default aliases
         if (-not $SkipAliases) {
             if (Get-Command Initialize-DefaultEmojiAliases -ErrorAction SilentlyContinue) {
-                Write-Host "   🔖 Setting up emoji aliases..." -ForegroundColor Gray
+                Write-Verbose "   🔖 Setting up emoji aliases..."
                 if ($Force) {
                     Initialize-DefaultEmojiAliases -Force -ErrorAction SilentlyContinue
                 }
@@ -81,28 +81,26 @@ function Initialize-EmojiTools {
             }
         }
         else {
-            Write-Host "   ⏭️  Skipping aliases (as requested)" -ForegroundColor Gray
+            Write-Verbose "   ⏭️  Skipping aliases (as requested)"
         }
 
         # Mark setup as complete
         New-Item -ItemType File -Path $setupPath -Force | Out-Null
 
-        Write-Host "`n✅ Initialization complete!" -ForegroundColor Green
+        Write-Information "`n✅ Initialization complete!" -InformationAction Continue
         if ($initialized.Count -gt 0) {
-            Write-Host "   Initialized: $($initialized -join ', ')" -ForegroundColor White
+            Write-Information "   Initialized: $($initialized -join ', ')" -InformationAction Continue
         }
 
-        Write-Host "`n💡 Quick Start:" -ForegroundColor Cyan
-        Write-Host "   Get-EmojiAlias -List              # View all shortcuts" -ForegroundColor White
-        Write-Host "   Get-EmojiAlias -Alias 'fire'      # Get emoji by alias" -ForegroundColor White
-        Write-Host "   Get-EmojiCollection                # View collections" -ForegroundColor White
-        Write-Host "   Show-EmojiPicker                   # Open interactive picker`n" -ForegroundColor White
+        Write-Information "`n💡 Quick Start:" -InformationAction Continue
+        Write-Information "   Get-EmojiAlias -List              # View all shortcuts" -InformationAction Continue
+        Write-Information "   Get-EmojiAlias -Alias 'fire'      # Get emoji by alias" -InformationAction Continue
+        Write-Information "   Get-EmojiCollection                # View collections" -InformationAction Continue
+        Write-Information "   Show-EmojiPicker                   # Open interactive picker`n" -InformationAction Continue
     }
     catch {
         Write-Error "Initialization failed: $_"
-        Write-Host "`nYou can manually run:" -ForegroundColor Yellow
-        Write-Host "   Initialize-EmojiCollections" -ForegroundColor White
-        Write-Host "   Initialize-DefaultEmojiAliases" -ForegroundColor White
+        Write-Warning "`nYou can manually run: Initialize-EmojiCollections and Initialize-DefaultEmojiAliases"
     }
 }
 
@@ -156,13 +154,13 @@ function Reset-EmojiTools {
         return
     }
 
-    Write-Host "`n🔄 Resetting EmojiTools..." -ForegroundColor Yellow
+    Write-Information "`n🔄 Resetting EmojiTools..." -InformationAction Continue
 
     foreach ($item in $itemsToRemove) {
         if (Test-Path $item.Path) {
             try {
                 Remove-Item $item.Path -Force
-                Write-Host "   ✅ Removed $($item.Name)" -ForegroundColor Gray
+                Write-Verbose "   ✅ Removed $($item.Name)"
             }
             catch {
                 Write-Warning "Failed to remove $($item.Name): $_"
@@ -170,7 +168,7 @@ function Reset-EmojiTools {
         }
     }
 
-    Write-Host "`n🎉 Re-initializing with defaults..." -ForegroundColor Cyan
+    Write-Information "`n🎉 Re-initializing with defaults..." -InformationAction Continue
     Initialize-EmojiTools -Force
 }
 
@@ -257,4 +255,3 @@ function Get-EmojiToolsInfo {
     Write-Host "  Initialize-EmojiTools -Force # Re-initialize" -ForegroundColor Gray
     Write-Host "`n"
 }
-

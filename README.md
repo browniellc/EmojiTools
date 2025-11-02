@@ -1,9 +1,17 @@
 # EmojiTools PowerShell Module
 
-[![PowerShell Gallery](https://img.shields.io/powershellgallery/v/EmojiTools)](https://www.powershellgallery.com/packages/EmojiTools)
-[![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/EmojiTools)](https://www.powershellgallery.com/packages/EmojiTools)
+<p align="center">
+  <img src="EmojiTools.png" alt="EmojiTools Logo" width="256" height="256">
+</p>
 
-A powerful PowerShell module for emoji search, management, and lookup with **automatic Unicode CLDR integration** to keep your emoji dataset always current.
+<p align="center">
+  <a href="https://www.powershellgallery.com/packages/EmojiTools"><img src="https://img.shields.io/powershellgallery/v/EmojiTools" alt="PowerShell Gallery"></a>
+  <a href="https://www.powershellgallery.com/packages/EmojiTools"><img src="https://img.shields.io/powershellgallery/dt/EmojiTools" alt="PowerShell Gallery Downloads"></a>
+</p>
+
+<p align="center">
+A powerful PowerShell module for emoji search, management, and lookup with <strong>automatic Unicode CLDR integration</strong> to keep your emoji dataset always current.
+</p>
 
 ![Emoji Picker](docs/assets/screenshots/emoji-picker-light.png)
 *Interactive browser-based emoji picker with search and category filtering*

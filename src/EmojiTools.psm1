@@ -30,8 +30,7 @@ if (Test-Path $Script:EmojiDataPath) {
         # Check dataset age and suggest update if needed
         $datasetAge = (Get-Date) - (Get-Item $Script:EmojiDataPath).LastWriteTime
         if ($Script:EmojiToolsConfig.AutoUpdateCheck -and $datasetAge.TotalDays -gt $Script:EmojiToolsConfig.UpdateInterval) {
-            Write-Host "ℹ️  Your emoji dataset is $([math]::Round($datasetAge.TotalDays)) days old." -ForegroundColor Yellow
-            Write-Host "   Run 'Update-EmojiDataset' to get the latest emojis from Unicode CLDR." -ForegroundColor Yellow
+            Write-Warning "ℹ️  Your emoji dataset is $([math]::Round($datasetAge.TotalDays)) days old. Run 'Update-EmojiDataset' to get the latest emojis from Unicode CLDR."
         }
     }
     catch {
@@ -41,7 +40,7 @@ if (Test-Path $Script:EmojiDataPath) {
 }
 else {
     Write-Warning "Emoji dataset not found at: $Script:EmojiDataPath"
-    Write-Host "🔄 Downloading initial emoji dataset from Unicode CLDR..." -ForegroundColor Cyan
+    Write-Information "🔄 Downloading initial emoji dataset from Unicode CLDR..." -InformationAction Continue
     # Auto-download on first load
     if (Get-Command Update-EmojiDataset -ErrorAction SilentlyContinue) {
         Update-EmojiDataset -Source Unicode -Silent
@@ -63,7 +62,7 @@ if (Test-Path $historyPath) {
         # Only notify if the latest update is within 7 days and has new emojis
         if ($daysAgo -le 7 -and $latestUpdate.added.Count -gt 0) {
             $totalAdded = $latestUpdate.added.Count
-            Write-Host "ℹ️  $totalAdded new emojis available in recent updates (Run Get-NewEmojis to see them)" -ForegroundColor Cyan
+            Write-Information "ℹ️  $totalAdded new emojis available in recent updates (Run Get-NewEmojis to see them)" -InformationAction Continue
         }
     }
 }
@@ -97,7 +96,7 @@ if (Get-Command Start-EmojiCacheWarmup -ErrorAction SilentlyContinue) {
 
 # First-run setup
 if ($Script:EmojiToolsConfig.AutoInitialize.Count -gt 0 -and -not (Test-Path $Script:EmojiToolsConfig.SetupCompletePath)) {
-    Write-Host "`n🎉 Welcome to EmojiTools! Running first-time setup..." -ForegroundColor Cyan
+    Write-Information "`n🎉 Welcome to EmojiTools! Running first-time setup..." -InformationAction Continue
 
     $shouldInitCollections = $Script:EmojiToolsConfig.AutoInitialize -contains 'Collections' -or $Script:EmojiToolsConfig.AutoInitialize -contains 'All'
     $shouldInitAliases = $Script:EmojiToolsConfig.AutoInitialize -contains 'Aliases' -or $Script:EmojiToolsConfig.AutoInitialize -contains 'All'
@@ -105,27 +104,27 @@ if ($Script:EmojiToolsConfig.AutoInitialize.Count -gt 0 -and -not (Test-Path $Sc
     try {
         # Initialize default collections
         if ($shouldInitCollections -and (Get-Command Initialize-EmojiCollections -ErrorAction SilentlyContinue)) {
-            Write-Host "   📁 Creating default emoji collections..." -ForegroundColor Gray
+            Write-Verbose "   📁 Creating default emoji collections..."
             Initialize-EmojiCollections -ErrorAction SilentlyContinue | Out-Null
         }
 
         # Initialize default aliases
         if ($shouldInitAliases -and (Get-Command Initialize-DefaultEmojiAliases -ErrorAction SilentlyContinue)) {
-            Write-Host "   🔖 Setting up emoji aliases..." -ForegroundColor Gray
+            Write-Verbose "   🔖 Setting up emoji aliases..."
             Initialize-DefaultEmojiAliases -ErrorAction SilentlyContinue | Out-Null
         }
 
         # Mark setup as complete
         New-Item -ItemType File -Path $Script:EmojiToolsConfig.SetupCompletePath -Force | Out-Null
 
-        Write-Host "`n✅ Setup complete! EmojiTools is ready to use." -ForegroundColor Green
-        Write-Host "   Try: Get-EmojiAlias -List" -ForegroundColor Cyan
-        Write-Host "   Try: Get-EmojiCollection" -ForegroundColor Cyan
-        Write-Host "   Try: Show-EmojiPicker`n" -ForegroundColor Cyan
+        Write-Information "`n✅ Setup complete! EmojiTools is ready to use." -InformationAction Continue
+        Write-Information "   Try: Get-EmojiAlias -List" -InformationAction Continue
+        Write-Information "   Try: Get-EmojiCollection" -InformationAction Continue
+        Write-Information "   Try: Show-EmojiPicker`n" -InformationAction Continue
     }
     catch {
         Write-Warning "First-time setup encountered an error: $_"
-        Write-Host "You can manually run: Initialize-EmojiCollections and Initialize-DefaultEmojiAliases" -ForegroundColor Yellow
+        Write-Warning "You can manually run: Initialize-EmojiCollections and Initialize-DefaultEmojiAliases"
     }
 }
 

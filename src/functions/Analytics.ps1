@@ -46,8 +46,8 @@ function Get-EmojiStats {
     $statsPath = Join-Path $PSScriptRoot "..\data\stats.json"
 
     if (-not (Test-Path $statsPath)) {
-        Write-Host "📊 No statistics available yet." -ForegroundColor Yellow
-        Write-Host "   Statistics will be collected as you use emoji functions." -ForegroundColor Gray
+        Write-Information "📊 No statistics available yet." -InformationAction Continue
+        Write-Information "   Statistics will be collected as you use emoji functions." -InformationAction Continue
         return
     }
 
@@ -67,6 +67,7 @@ function Get-EmojiStats {
         }
     }
 
+    # Display formatted statistics (Write-Host is appropriate here for formatted console output)
     Write-Host "`n📊 Emoji Statistics" -ForegroundColor Cyan
     Write-Host "=" * 60 -ForegroundColor Gray
 

@@ -102,7 +102,7 @@
     PrivateData = @{
         PSData = @{
             # Tags applied to this module to help with module discovery
-            Tags = @('Emoji', 'Unicode', 'Search', 'Text', 'Utility')
+            Tags = @('Emoji', 'Unicode', 'Search', 'Text', 'Utility', 'CLDR', 'Cross-Platform', 'PSEdition_Core', 'Clipboard', 'Picker')
 
             # A URL to the license for this module.
             LicenseUri = 'https://github.com/browniellc/EmojiTools/blob/master/LICENSE'
@@ -111,7 +111,10 @@
             ProjectUri = 'https://github.com/browniellc/EmojiTools'
 
             # A URL to an icon representing this module.
-            # IconUri = ''
+            IconUri = 'https://raw.githubusercontent.com/browniellc/EmojiTools/master/EmojiTools.png'
+
+            # A URL to the help documentation for this module.
+            HelpInfoUri = 'https://github.com/browniellc/EmojiTools/blob/master/docs/INDEX.md'
 
             # ReleaseNotes of this module
             ReleaseNotes = @'

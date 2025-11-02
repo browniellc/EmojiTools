@@ -59,7 +59,7 @@ BeforeAll {
     # Mock GitHub API calls to avoid rate limits in CI
     Mock -ModuleName EmojiTools Invoke-RestMethod {
         param($Uri)
-        
+
         # Mock response for language list API
         if ($Uri -like "*unicode-org/cldr-json*") {
             return @(
@@ -72,7 +72,7 @@ BeforeAll {
                 @{ type = 'file'; name = 'README.md' }
             )
         }
-        
+
         # If it's a specific language download, return mock emoji data
         return @{
             content = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes(@"

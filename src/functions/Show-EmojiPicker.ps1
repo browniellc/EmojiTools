@@ -822,12 +822,12 @@ function Show-EmojiPicker {
     $tempHtml = Join-Path $env:TEMP "emoji-picker.html"
     $html | Out-File -FilePath $tempHtml -Encoding UTF8
 
-    Write-Host "🎭 Opening emoji picker..." -ForegroundColor Cyan
-    Write-Host "   HTML saved to: $tempHtml" -ForegroundColor Gray
+    Write-Information "🎭 Opening emoji picker..." -InformationAction Continue
+    Write-Verbose "   HTML saved to: $tempHtml"
 
     # Standalone mode - just open and exit
     if ($Standalone) {
-        Write-Host "   Standalone mode: Close browser window manually when done" -ForegroundColor Yellow
+        Write-Information "   Standalone mode: Close browser window manually when done" -InformationAction Continue
         Start-Process $tempHtml
         Write-Host "✅ Emoji picker opened" -ForegroundColor Green
         return
@@ -841,7 +841,7 @@ function Show-EmojiPicker {
 
     try {
         $listener.Start()
-        Write-Host "   Listening on http://localhost:$Port" -ForegroundColor Gray
+        Write-Verbose "   Listening on http://localhost:$Port"
 
         # Open in browser and track the process
         $browserProcess = Start-Process $tempHtml -PassThru
@@ -953,14 +953,14 @@ function Show-EmojiPicker {
             # Also copy to clipboard on PowerShell side (backup in case JS failed)
             try {
                 Set-Clipboard -Value $selectedEmoji.emoji
-                Write-Host "📋 Copied to clipboard!" -ForegroundColor Cyan
+                Write-Information "📋 Copied to clipboard!" -InformationAction Continue
             }
             catch {
-                Write-Host "📋 Emoji selected (clipboard copy handled by browser)" -ForegroundColor Cyan
+                Write-Information "📋 Emoji selected (clipboard copy handled by browser)" -InformationAction Continue
             }
         }
     }
     elseif ($stopwatch.Elapsed -ge $timeout) {
-        Write-Host "⏱️  Timed out waiting for selection" -ForegroundColor Yellow
+        Write-Warning "⏱️  Timed out waiting for selection"
     }
 }
