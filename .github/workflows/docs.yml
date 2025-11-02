@@ -33,8 +33,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install mkdocs-material
-          pip install mkdocs-git-revision-date-localized-plugin
+          pip install -r requirements.txt
 
       - name: Deploy to GitHub Pages
         run: mkdocs gh-deploy --force
