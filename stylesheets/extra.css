@@ -1,0 +1,128 @@
+/* Custom styles for EmojiTools documentation */
+
+:root {
+    --emoji-primary: #667eea;
+    --emoji-accent: #f093fb;
+}
+
+/* Hero section styling */
+.hero-section {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(135deg, var(--emoji-primary) 0%, var(--emoji-accent) 100%);
+    color: white;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.hero-section h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Card grid styling */
+.grid.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.grid.cards > * {
+    border: 1px solid var(--md-default-fg-color--lightest);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.grid.cards > *:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Use cases section */
+.use-cases {
+    background: var(--md-code-bg-color);
+    padding: 2rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.use-cases ul {
+    columns: 2;
+    column-gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .use-cases ul {
+        columns: 1;
+    }
+}
+
+/* Footer CTA */
+.footer-cta {
+    text-align: center;
+    padding: 2rem;
+    background: var(--md-code-bg-color);
+    border-radius: 8px;
+    margin-top: 3rem;
+}
+
+/* Code block enhancements */
+.highlight pre {
+    border-left: 4px solid var(--emoji-primary);
+}
+
+/* Emoji in headings */
+h1, h2, h3, h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Command reference table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th {
+    background: var(--emoji-primary);
+    color: white;
+    padding: 0.75rem;
+}
+
+table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* Admonition custom colors */
+.admonition.success {
+    border-left-color: #00c851;
+}
+
+.admonition.tip {
+    border-left-color: var(--emoji-primary);
+}
+
+.admonition.example {
+    border-left-color: var(--emoji-accent);
+}
+
+/* Button enhancements */
+.md-button--primary {
+    background: linear-gradient(135deg, var(--emoji-primary) 0%, var(--emoji-accent) 100%);
+    border: none;
+}
+
+.md-button--primary:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
