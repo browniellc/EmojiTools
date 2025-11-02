@@ -105,16 +105,16 @@
             Tags = @('Emoji', 'Unicode', 'Search', 'Text', 'Utility', 'CLDR', 'Cross-Platform', 'PSEdition_Core', 'Clipboard', 'Picker')
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/browniellc/EmojiTools/blob/master/LICENSE'
+            LicenseUri = 'https://github.com/tsabo/EmojiTools/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/browniellc/EmojiTools'
+            ProjectUri = 'https://github.com/tsabo/EmojiTools'
 
             # A URL to an icon representing this module.
-            IconUri = 'https://raw.githubusercontent.com/browniellc/EmojiTools/master/EmojiTools.png'
+            IconUri = 'https://raw.githubusercontent.com/tsabo/EmojiTools/master/EmojiTools.png'
 
             # A URL to the help documentation for this module.
-            HelpInfoUri = 'https://github.com/browniellc/EmojiTools/blob/master/docs/INDEX.md'
+            HelpInfoUri = 'https://github.com/tsabo/EmojiTools/blob/master/docs/INDEX.md'
 
             # ReleaseNotes of this module
             ReleaseNotes = @'

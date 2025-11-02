@@ -1,0 +1,115 @@
+site_name: EmojiTools
+site_description: A powerful PowerShell module for emoji search, management, and automation
+site_author: Tsabo
+site_url: https://tsabo.github.io/EmojiTools
+
+repo_name: Tsabo/EmojiTools
+repo_url: https://github.com/Tsabo/EmojiTools
+edit_uri: edit/master/docs/
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Tsabo/EmojiTools
+    - icon: fontawesome/solid/terminal
+      link: https://www.powershellgallery.com/packages/EmojiTools
+  version:
+    provider: mike
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+      fallback_to_build_date: true
+      enable_git_follow: false
+  - minify:
+      minify_html: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - First Steps: getting-started/first-steps.md
+  - User Guide:
+    - Searching Emojis: user-guide/searching.md
+    - Collections: user-guide/collections.md
+    - Emoji Picker: user-guide/picker.md
+    - Export & Share: user-guide/export.md
+    - Aliases: user-guide/aliases.md
+  - Automation:
+    - Auto-Updates: automation/auto-updates.md
+    - Scheduled Tasks: automation/scheduled-tasks.md
+    - History Tracking: automation/history.md
+  - Advanced:
+    - Custom Datasets: advanced/custom-datasets.md
+    - Custom Sources: advanced/custom-sources.md
+    - Analytics: advanced/analytics.md
+    - Caching: advanced/caching.md
+  - Reference:
+    - Command Reference: reference/commands.md
+    - Configuration: reference/configuration.md
+    - Troubleshooting: reference/troubleshooting.md
+  - Contributing:
+    - Development Setup: contributing/setup.md
+    - Testing Strategy: contributing/testing.md

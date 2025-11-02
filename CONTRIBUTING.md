@@ -56,7 +56,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 ```powershell
 # Clone the repository
-git clone https://github.com/browniellc/EmojiTools.git
+git clone https://github.com/tsabo/EmojiTools.git
 cd EmojiTools
 
 # Import the module for testing

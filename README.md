@@ -13,6 +13,10 @@
 A powerful PowerShell module for emoji search, management, and lookup with <strong>automatic Unicode CLDR integration</strong> to keep your emoji dataset always current.
 </p>
 
+<p align="center">
+  <strong>📖 <a href="https://tsabo.github.io/EmojiTools/">Read the Full Documentation</a></strong>
+</p>
+
 ![Emoji Picker](docs/assets/screenshots/emoji-picker-light.png)
 *Interactive browser-based emoji picker with search and category filtering*
 
@@ -51,7 +55,7 @@ Import-Module EmojiTools
 
 ```powershell
 # Clone the repository
-git clone https://github.com/browniellc/EmojiTools.git
+git clone https://github.com/tsabo/EmojiTools.git
 cd EmojiTools
 
 # Import the module
@@ -89,6 +93,8 @@ Search-Emoji -Query "smile"
 Show-EmojiPicker
 ```
 
+📚 **[View Complete Quick Start Guide →](https://tsabo.github.io/EmojiTools/getting-started/quickstart/)**
+
 ## 🔄 Keeping Dataset Current
 
 ### Check Dataset Status
@@ -120,7 +126,7 @@ The module will:
 Update-EmojiDataset -Source Unicode
 ```
 
-**See [AUTO_UPDATE_GUIDE.md](docs/AUTO_UPDATE_GUIDE.md) for complete details.**
+📚 **[View Auto-Update Documentation →](https://tsabo.github.io/EmojiTools/automation/auto-updates/)**
 
 ## 📊 History Tracking
 
@@ -160,7 +166,7 @@ Export-EmojiHistory -Format HTML -Path "report.html" -IncludeDetails
 Export-EmojiHistory -Format Markdown -Path "changelog.md"
 ```
 
-**See [HISTORY_GUIDE.md](docs/HISTORY_GUIDE.md) for complete details.**
+📚 **[View History Tracking Documentation →](https://tsabo.github.io/EmojiTools/automation/history/)**
 
 ## 📖 Usage
 
@@ -222,9 +228,9 @@ Export-Emoji -Format HTML -StyleTheme Dark -Category "Food & Drink" -OutputPath 
 Export-Emoji -Format HTML -Collection "Favorites" -StyleTheme Colorful -OutputPath "favorites.html"
 ```
 
-**See [EXPORT_GUIDE.md](docs/EXPORT_GUIDE.md) for complete details and examples.**
+📚 **[View Export Documentation →](https://tsabo.github.io/EmojiTools/user-guide/export/)**
 
-For more examples, see [QUICKSTART.md](docs/QUICKSTART.md) and [examples/EXAMPLES.ps1](examples/EXAMPLES.ps1).
+For more examples, see the **[documentation](https://tsabo.github.io/EmojiTools/)** and [examples/EXAMPLES.ps1](examples/EXAMPLES.ps1).
 
 ## 📁 Module Structure
 
@@ -266,22 +272,35 @@ EmojiTools/
 
 ## 📚 Documentation
 
-Complete documentation is available in the [docs/](docs/) folder:
+**📖 [View Full Documentation Website →](https://tsabo.github.io/EmojiTools/)**
 
-- **[INDEX.md](docs/INDEX.md)** - Complete documentation index
-- **[QUICKSTART.md](docs/QUICKSTART.md)** - Get started quickly
-- **[EMOJI_PICKER_GUIDE.md](docs/EMOJI_PICKER_GUIDE.md)** - Interactive emoji picker
-- **[EXPORT_GUIDE.md](docs/EXPORT_GUIDE.md)** - Export to JSON, HTML, Markdown, CSV
-- **[AUTO_UPDATE_GUIDE.md](docs/AUTO_UPDATE_GUIDE.md)** - Automatic dataset updates
-- **[HISTORY_GUIDE.md](docs/HISTORY_GUIDE.md)** - Update history tracking
-- **[CACHING_GUIDE.md](docs/CACHING_GUIDE.md)** - High-performance caching
-- **[SCHEDULED_TASKS_GUIDE.md](docs/SCHEDULED_TASKS_GUIDE.md)** - Cross-platform scheduled tasks
-- **[CUSTOM_DATASETS_GUIDE.md](docs/CUSTOM_DATASETS_GUIDE.md)** - Custom emoji datasets
-- **[CUSTOM_SOURCES_GUIDE.md](docs/CUSTOM_SOURCES_GUIDE.md)** - Custom remote sources
-- **[COLLECTIONS_GUIDE.md](docs/COLLECTIONS_GUIDE.md)** - Emoji collections
-- **[ALIASES_GUIDE.md](docs/ALIASES_GUIDE.md)** - Emoji aliases and shortcuts
-- **[ANALYTICS_GUIDE.md](docs/ANALYTICS_GUIDE.md)** - Usage statistics
-- **[SETUP_GUIDE.md](docs/SETUP_GUIDE.md)** - Setup and configuration
+### Getting Started
+- **[Installation Guide](https://tsabo.github.io/EmojiTools/getting-started/installation/)** - Install and set up EmojiTools
+- **[Quick Start](https://tsabo.github.io/EmojiTools/getting-started/quickstart/)** - Get up and running in minutes
+- **[First Steps](https://tsabo.github.io/EmojiTools/getting-started/first-steps/)** - Your first tasks with EmojiTools
+
+### User Guide
+- **[Searching Emojis](https://tsabo.github.io/EmojiTools/user-guide/searching/)** - Master emoji search techniques
+- **[Emoji Picker](https://tsabo.github.io/EmojiTools/user-guide/picker/)** - Interactive visual emoji picker
+- **[Collections](https://tsabo.github.io/EmojiTools/user-guide/collections/)** - Organize emojis into collections
+- **[Export & Share](https://tsabo.github.io/EmojiTools/user-guide/export/)** - Export to HTML, JSON, Markdown, CSV
+- **[Aliases](https://tsabo.github.io/EmojiTools/user-guide/aliases/)** - Create emoji shortcuts
+
+### Automation
+- **[Auto-Updates](https://tsabo.github.io/EmojiTools/automation/auto-updates/)** - Automatic dataset updates
+- **[Scheduled Tasks](https://tsabo.github.io/EmojiTools/automation/scheduled-tasks/)** - Cross-platform scheduling
+- **[History Tracking](https://tsabo.github.io/EmojiTools/automation/history/)** - Track emoji updates
+
+### Advanced
+- **[Custom Datasets](https://tsabo.github.io/EmojiTools/advanced/custom-datasets/)** - Create custom emoji data
+- **[Custom Sources](https://tsabo.github.io/EmojiTools/advanced/custom-sources/)** - Register remote sources
+- **[Analytics](https://tsabo.github.io/EmojiTools/advanced/analytics/)** - Usage statistics
+- **[Caching](https://tsabo.github.io/EmojiTools/advanced/caching/)** - High-performance caching
+
+### Reference
+- **[Commands](https://tsabo.github.io/EmojiTools/reference/commands/)** - Complete command reference
+- **[Configuration](https://tsabo.github.io/EmojiTools/reference/configuration/)** - Configuration options
+- **[Troubleshooting](https://tsabo.github.io/EmojiTools/reference/troubleshooting/)** - Common issues and solutions
 
 ## 🔧 Key Functions
 
@@ -334,7 +353,7 @@ The module includes comprehensive functions for emoji management:
 - **Remove-EmojiScheduledTask** - Remove scheduled tasks
 - **Test-EmojiScheduledTask** - Check if task exists
 
-For complete function reference, run `Get-Command -Module EmojiTools` or see [INDEX.md](docs/INDEX.md).
+For complete function reference, run `Get-Command -Module EmojiTools` or see the **[Commands Reference](https://tsabo.github.io/EmojiTools/reference/commands/)**.
 
 ## 🌐 Data Sources
 
@@ -349,7 +368,7 @@ The module supports official Unicode CLDR as the primary data source:
 **Custom Sources**:
 - Register custom remote URLs with `Register-EmojiSource`
 - Support for CSV and JSON formats
-- See [CUSTOM_SOURCES_GUIDE.md](docs/CUSTOM_SOURCES_GUIDE.md)
+- See **[Custom Sources Guide](https://tsabo.github.io/EmojiTools/advanced/custom-sources/)**
 
 ## 🆘 Troubleshooting
 
@@ -368,7 +387,7 @@ Ensure your terminal/console supports UTF-8 encoding:
 ### Need to reset everything
 Run `Reset-EmojiTools -IncludeStats -Force`
 
-For more help, see the [documentation](docs/INDEX.md) or [SETUP_GUIDE.md](docs/SETUP_GUIDE.md).
+For more help, see the **[Troubleshooting Guide](https://tsabo.github.io/EmojiTools/reference/troubleshooting/)** or browse the **[full documentation](https://tsabo.github.io/EmojiTools/)**.
 
 ## 📄 License
 
@@ -378,9 +397,10 @@ Copyright © 2025. All rights reserved.
 
 Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-- Report bugs or request features via [GitHub Issues](https://github.com/browniellc/EmojiTools/issues)
+- Report bugs or request features via [GitHub Issues](https://github.com/tsabo/EmojiTools/issues)
 - Submit pull requests for improvements
-- See [TESTING_STRATEGY.md](docs/TESTING_STRATEGY.md) for testing information
+- See **[Development Setup Guide](https://tsabo.github.io/EmojiTools/contributing/setup/)** for getting started
+- See **[Testing Guide](https://tsabo.github.io/EmojiTools/contributing/testing/)** for testing information
 
 ## 📊 Version
 
