@@ -2,90 +2,94 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://tsabo.github.io/EmojiTools/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/INDEX/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/advanced/analytics/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/advanced/caching/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/advanced/custom-datasets/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/advanced/custom-sources/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
+    </url>
+    <url>
+         <loc>https://tsabo.github.io/EmojiTools/advanced/data-migration/</loc>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/automation/auto-updates/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/automation/history/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/automation/scheduled-tasks/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/contributing/setup/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/contributing/testing/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/getting-started/first-steps/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/getting-started/installation/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/getting-started/quickstart/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/reference/commands/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/reference/configuration/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/reference/troubleshooting/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/user-guide/aliases/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/user-guide/collections/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/user-guide/export/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/user-guide/picker/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
     <url>
          <loc>https://tsabo.github.io/EmojiTools/user-guide/searching/</loc>
-         <lastmod>2025-11-02</lastmod>
+         <lastmod>2025-11-08</lastmod>
     </url>
 </urlset>
