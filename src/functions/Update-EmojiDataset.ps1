@@ -279,8 +279,29 @@ function Update-EmojiDataset {
                     Write-Information "📥 Downloading emoji categories from Unicode..." -InformationAction Continue
                 }
 
-                $emojiTestUrl = "https://unicode.org/Public/emoji/latest/emoji-test.txt"
-                $emojiTestContent = Invoke-RestMethod -Uri $emojiTestUrl -Method Get
+                # Try multiple versions and URLs for emoji-test.txt
+                $emojiTestUrls = @(
+                    "https://www.unicode.org/Public/emoji/16.0/emoji-test.txt",
+                    "https://www.unicode.org/Public/emoji/15.1/emoji-test.txt",
+                    "https://www.unicode.org/Public/emoji/15.0/emoji-test.txt",
+                    "https://unicode.org/Public/emoji/latest/emoji-test.txt"
+                )
+
+                $emojiTestContent = $null
+                foreach ($testUrl in $emojiTestUrls) {
+                    try {
+                        $emojiTestContent = Invoke-RestMethod -Uri $testUrl -Method Get -ErrorAction Stop
+                        Write-Verbose "Successfully downloaded emoji-test.txt from: $testUrl"
+                        break
+                    }
+                    catch {
+                        Write-Verbose "Failed to download from $testUrl : $_"
+                    }
+                }
+
+                if (-not $emojiTestContent) {
+                    throw "Could not download emoji-test.txt from any Unicode source"
+                }
 
                 # Parse emoji-test.txt to build category lookup
                 $categoryLookup = @{}

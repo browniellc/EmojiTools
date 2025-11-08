@@ -3,7 +3,7 @@
     RootModule = 'EmojiTools.psm1'
 
     # Version number of this module.
-    ModuleVersion = '1.16.0'
+    ModuleVersion = '1.17.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -57,6 +57,9 @@
         'Initialize-EmojiTools',
         'Reset-EmojiTools',
         'Get-EmojiToolsInfo',
+        'Get-EmojiToolsDataPath',
+        'Initialize-EmojiToolsDataDirectory',
+        'Invoke-EmojiDataMigration',
         'Import-CustomEmojiDataset',
         'Export-CustomEmojiDataset',
         'New-CustomEmojiDataset',

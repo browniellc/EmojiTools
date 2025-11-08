@@ -106,6 +106,7 @@ nav:
     - Custom Sources: advanced/custom-sources.md
     - Analytics: advanced/analytics.md
     - Caching: advanced/caching.md
+    - Data Migration: advanced/data-migration.md
   - Reference:
     - Command Reference: reference/commands.md
     - Configuration: reference/configuration.md

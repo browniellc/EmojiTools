@@ -3,6 +3,20 @@
 
 $ModulePath = Split-Path -Parent $MyInvocation.MyCommand.Path
 
+# Load all function files first (including DataMigration functions)
+Get-ChildItem "$ModulePath\functions" -Filter *.ps1 -ErrorAction SilentlyContinue | ForEach-Object {
+    try {
+        . $_.FullName
+        Write-Verbose "Loaded function: $($_.BaseName)"
+    }
+    catch {
+        Write-Warning "Failed to load function $($_.Name): $_"
+    }
+}
+
+# Initialize version-independent data directory
+$Script:UserDataPath = Initialize-EmojiToolsDataDirectory
+
 # Configuration (Script-scoped - accessible to all functions in the module)
 $Script:EmojiToolsConfig = @{
     AutoUpdateCheck = $true  # Set to $false to disable auto-update checks
@@ -10,13 +24,13 @@ $Script:EmojiToolsConfig = @{
     # AutoInitialize features: 'Collections', 'Aliases', 'All', or empty array to disable
     # Remove items from array to skip specific features
     AutoInitialize = @('Collections', 'Aliases')  # Set to @() to disable auto-initialization
-    DataPath = Join-Path $ModulePath "data\emoji.csv"
-    MetadataPath = Join-Path $ModulePath "data\metadata.json"
-    SetupCompletePath = Join-Path $ModulePath "data\.setup-complete"
+    DataPath = Join-Path $Script:UserDataPath "emoji.csv"
+    MetadataPath = Join-Path $Script:UserDataPath "metadata.json"
+    SetupCompletePath = Join-Path $Script:UserDataPath ".setup-complete"
     # Multi-language support
     CurrentLanguage = 'en'    # Default language (English)
     InstalledLanguages = @('en') # List of installed language packs
-    LanguagesPath = Join-Path $ModulePath "data\languages"
+    LanguagesPath = Join-Path $Script:UserDataPath "languages"
 }
 
 # Load emoji dataset (Script-scoped)
@@ -67,18 +81,7 @@ if (Test-Path $historyPath) {
     }
 }
 
-# Import all function files from the functions directory
-Get-ChildItem "$ModulePath\functions" -Filter *.ps1 -ErrorAction SilentlyContinue | ForEach-Object {
-    try {
-        . $_.FullName
-        Write-Verbose "Loaded function: $($_.BaseName)"
-    }
-    catch {
-        Write-Warning "Failed to load function $($_.Name): $_"
-    }
-}
-
-# Initialize caching system (Phase 1 & 2)
+# Cache warmup (optional - runs in background)
 if (Get-Command Initialize-EmojiIndices -ErrorAction SilentlyContinue) {
     Write-Verbose "Initializing emoji search indices..."
     Initialize-EmojiIndices
@@ -132,7 +135,7 @@ if ($Script:EmojiToolsConfig.AutoInitialize.Count -gt 0 -and -not (Test-Path $Sc
 }
 
 # Export module members
-Export-ModuleMember -Function Get-Emoji, Search-Emoji, Update-EmojiDataset, Copy-Emoji, Get-EmojiWithSkinTone, Export-Emoji, Show-EmojiPicker, Join-Emoji, New-EmojiCollection, Add-EmojiToCollection, Remove-EmojiFromCollection, Get-EmojiCollection, Remove-EmojiCollection, Export-EmojiCollection, Import-EmojiCollection, Initialize-EmojiCollections, Get-EmojiStats, Clear-EmojiStats, Export-EmojiStats, Get-EmojiAlias, New-EmojiAlias, Remove-EmojiAlias, Set-EmojiAlias, Initialize-DefaultEmojiAliases, Import-EmojiAliases, Export-EmojiAliases, Initialize-EmojiTools, Reset-EmojiTools, Get-EmojiToolsInfo, Import-CustomEmojiDataset, Export-CustomEmojiDataset, New-CustomEmojiDataset, Get-CustomEmojiDatasetInfo, Reset-EmojiDataset, Emoji, Get-EmojiDatasetInfo, Enable-EmojiAutoUpdate, Disable-EmojiAutoUpdate, Clear-EmojiCache, Get-EmojiCacheStats, Set-EmojiCacheConfig, Get-EmojiCacheConfig, Start-EmojiCacheWarmup, Get-EmojiUpdateHistory, Get-NewEmojis, Get-RemovedEmojis, Export-EmojiHistory, Clear-EmojiHistory, Register-EmojiSource, Unregister-EmojiSource, Get-EmojiSource, Get-EmojiLanguage, Set-EmojiLanguage, Install-EmojiLanguage, Uninstall-EmojiLanguage, New-EmojiScheduledTask, Remove-EmojiScheduledTask, Test-EmojiScheduledTask, Get-EmojiPlatform
+Export-ModuleMember -Function Get-Emoji, Search-Emoji, Update-EmojiDataset, Copy-Emoji, Get-EmojiWithSkinTone, Export-Emoji, Show-EmojiPicker, Join-Emoji, New-EmojiCollection, Add-EmojiToCollection, Remove-EmojiFromCollection, Get-EmojiCollection, Remove-EmojiCollection, Export-EmojiCollection, Import-EmojiCollection, Initialize-EmojiCollections, Get-EmojiStats, Clear-EmojiStats, Export-EmojiStats, Get-EmojiAlias, New-EmojiAlias, Remove-EmojiAlias, Set-EmojiAlias, Initialize-DefaultEmojiAliases, Import-EmojiAliases, Export-EmojiAliases, Initialize-EmojiTools, Reset-EmojiTools, Get-EmojiToolsInfo, Import-CustomEmojiDataset, Export-CustomEmojiDataset, New-CustomEmojiDataset, Get-CustomEmojiDatasetInfo, Reset-EmojiDataset, Emoji, Get-EmojiDatasetInfo, Enable-EmojiAutoUpdate, Disable-EmojiAutoUpdate, Clear-EmojiCache, Get-EmojiCacheStats, Set-EmojiCacheConfig, Get-EmojiCacheConfig, Start-EmojiCacheWarmup, Get-EmojiUpdateHistory, Get-NewEmojis, Get-RemovedEmojis, Export-EmojiHistory, Clear-EmojiHistory, Register-EmojiSource, Unregister-EmojiSource, Get-EmojiSource, Get-EmojiLanguage, Set-EmojiLanguage, Install-EmojiLanguage, Uninstall-EmojiLanguage, New-EmojiScheduledTask, Remove-EmojiScheduledTask, Test-EmojiScheduledTask, Get-EmojiPlatform, Get-EmojiToolsDataPath, Initialize-EmojiToolsDataDirectory, Invoke-EmojiDataMigration
 
 # Export variables for testing purposes (allows tests to verify internal state)
-Export-ModuleMember -Variable EmojiToolsConfig, EmojiData, EmojiDataPath
+Export-ModuleMember -Variable EmojiToolsConfig, EmojiData, EmojiDataPath, UserDataPath

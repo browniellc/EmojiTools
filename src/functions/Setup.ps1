@@ -218,6 +218,7 @@ function Get-EmojiToolsInfo {
     Write-Host ("  Version:           {0}" -f $module.Version) -ForegroundColor White
     Write-Host ("  Exported Functions: {0}" -f $module.ExportedFunctions.Count) -ForegroundColor White
     Write-Host ("  Module Path:       {0}" -f $module.ModuleBase) -ForegroundColor White
+    Write-Host ("  User Data Path:    {0}" -f (Get-EmojiToolsDataPath)) -ForegroundColor White
 
     Write-Host "`nData Status:" -ForegroundColor Yellow
     Write-Host ("  Setup Complete:    {0}" -f $(if ($setupComplete) { "✅ Yes" } else { "❌ No" })) -ForegroundColor White
