@@ -89,7 +89,10 @@ if (Get-Command Start-EmojiCacheWarmup -ErrorAction SilentlyContinue) {
     # Run warmup in background to avoid slowing module load
     Start-Job -ScriptBlock {
         param($ModulePath)
-        Import-Module (Join-Path $ModulePath "EmojiTools.psd1")
+        # Suppress warnings and information messages during background import
+        $WarningPreference = 'SilentlyContinue'
+        $InformationPreference = 'SilentlyContinue'
+        Import-Module (Join-Path $ModulePath "EmojiTools.psd1") -WarningAction SilentlyContinue
         Start-EmojiCacheWarmup
     } -ArgumentList $ModulePath | Out-Null
 }
