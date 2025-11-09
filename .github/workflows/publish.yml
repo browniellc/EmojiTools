@@ -21,15 +21,28 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "Running tests before publish..."
-          Install-Module -Name Pester -RequiredVersion 5.7.1 -Force -SkipPublisherCheck
+          # Use Pester 5.6.1 to avoid Linux TestDrive bugs in 5.7.1
+          Install-Module -Name Pester -RequiredVersion 5.6.1 -Force -SkipPublisherCheck
           $result = Invoke-Pester -Path ./tests/ -PassThru
           
+          # Check for any failures: failed tests, container failures, or framework errors
           if ($result.FailedCount -gt 0) {
-              Write-Error "❌ Tests failed! Cannot publish."
+              Write-Error "❌ $($result.FailedCount) test(s) failed! Cannot publish."
               exit 1
           }
           
-          Write-Host "✅ All tests passed!"
+          if ($result.Result -eq 'Failed') {
+              Write-Error "❌ Test run failed (framework/container errors)! Cannot publish."
+              exit 1
+          }
+          
+          # Ensure tests actually ran
+          if ($result.TotalCount -eq 0) {
+              Write-Error "❌ No tests were executed! Cannot publish."
+              exit 1
+          }
+          
+          Write-Host "✅ All $($result.PassedCount) tests passed!"
 
   # Then publish only if tests pass
   publish:

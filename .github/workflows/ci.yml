@@ -36,7 +36,8 @@ jobs:
       shell: pwsh
       run: |
         if (Test-Path './tests') {
-          Install-Module -Name Pester -MinimumVersion 5.0 -Force -SkipPublisherCheck
+          # Use Pester 5.6.1 to avoid Linux TestDrive bugs in 5.7.1
+          Install-Module -Name Pester -RequiredVersion 5.6.1 -Force -SkipPublisherCheck
           Get-Module Pester -ListAvailable
         }
     
@@ -74,11 +75,35 @@ jobs:
           Import-Module Pester -MinimumVersion 5.0
           $config = New-PesterConfiguration
           $config.Run.Path = './tests'
-          $config.Run.Exit = $true
+          $config.Run.Exit = $false  # Changed to false to capture result
           $config.CodeCoverage.Enabled = $false
           $config.TestResult.Enabled = $true
           $config.TestResult.OutputPath = './testResults.xml'
-          Invoke-Pester -Configuration $config
+          
+          $result = Invoke-Pester -Configuration $config
+          
+          # Validate test results
+          Write-Host "Test Results: Passed=$($result.PassedCount), Failed=$($result.FailedCount), Total=$($result.TotalCount)"
+          
+          # Check for actual test failures
+          if ($result.FailedCount -gt 0) {
+            Write-Error "❌ $($result.FailedCount) test(s) failed"
+            exit 1
+          }
+          
+          # Check for framework/container errors (Result='Failed' even when FailedCount=0)
+          if ($result.Result -eq 'Failed') {
+            Write-Error "❌ Test framework reported failure (container or load errors)"
+            exit 1
+          }
+          
+          # Ensure tests actually ran
+          if ($result.TotalCount -eq 0) {
+            Write-Error "❌ No tests were executed"
+            exit 1
+          }
+          
+          Write-Host "✅ All $($result.PassedCount) tests passed!"
         } else {
           Write-Host "No tests directory found, skipping Pester tests"
         }
