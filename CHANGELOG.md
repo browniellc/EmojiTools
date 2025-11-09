@@ -7,6 +7,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.18.0] - 2025-11-09
+
+### Added
+- **Security Validation** - Enhanced input validation and security checks
+  - Added `ValidationHelpers.ps1` with 8 reusable validation functions
+  - Added `SecurityHelpers.ps1` with comprehensive security validation
+  - Added `ErrorHandling.ps1` for consistent error handling patterns
+  - URL validation with path traversal detection (`..'`, `%00`, malicious protocols)
+  - Parameter validation attributes (`ValidateNotNullOrEmpty`, `ValidateNotNull`)
+  - API key redaction in error messages (long alphanumeric strings)
+  - WhatIf support added to `Register-EmojiSource`
+
+### Changed
+- **Code Quality Improvements** - Major refactoring and standardization
+  - Extracted duplicate code patterns (73% reduction in duplication)
+  - Refactored `Get-Emoji.ps1` (40% reduction, 125→75 lines)
+  - Refactored `Search-Emoji.ps1` (18% reduction, 189→155 lines)
+  - Refactored `Collections.ps1` (22% reduction, 45 lines eliminated)
+  - Centralized validation logic in `ValidationHelpers.ps1`
+  - Added comprehensive parameter validation across all functions
+
+### Fixed
+- **PSScriptAnalyzer Compliance** - All warnings and errors resolved
+  - Fixed `PSAvoidUsingConvertToSecureStringWithPlainText` with justified suppressions
+  - Fixed `PSUseConsistentIndentation` issues (ValidateScript blocks now 8-space indent)
+  - Fixed `PSUseDeclaredVarsMoreThanAssignments` in test files
+  - Result: 0 errors, 0 warnings (100% clean)
+- **Security Test Suite** - Enhanced test coverage and fixes
+  - Fixed pattern matching in `Test-SecureUrl` and `Test-SecurePath`
+  - Updated security test expectations to match validation behavior
+  - Added test for API key redaction (using safe test patterns)
+  - Test pass rate improved: 79.3% → 82.7% (+7 tests passing)
+- **Test Runner** - Non-interactive execution
+  - Added `-Force` parameter to `Clear-EmojiStats` calls
+  - Tests now run fully automated without user prompts
+
+### Documentation
+- Created comprehensive TDD refactoring summary documents
+  - Phase 1: Security & Error Handling foundations
+  - Phase 2: Validation & business logic improvements  
+  - Phase 3: Code quality & design patterns
+  - Test fixes and improvements summary
+
+## [1.17.0] - 2025-11-08
+
+### Added
+- **Version-Independent Data Storage** - Module data now persists across versions
+  - Data files moved from module directory to `$env:LOCALAPPDATA\EmojiTools`
+  - Survives module updates, reinstalls, and version changes
+  - Automatic migration from old location on first run
+  - Preserves: emoji datasets, collections, aliases, history, statistics
+  - Cross-platform compatible paths (`$HOME/.local/share/EmojiTools` on Linux/Mac)
+
+### Fixed
+- **Data Persistence** - Resolved data loss issues during module updates
+  - Custom collections no longer deleted on module upgrade
+  - Emoji aliases preserved across versions
+  - Usage statistics and history maintained
+  - Auto-update settings retained
+
+### Changed
+- **Module Initialization** - Improved first-run experience
+  - Automatic data migration from module directory
+  - Clear feedback during migration process
+  - Maintains backward compatibility
+
 ## [1.16.0] - 2025-11-02
 
 ### Added

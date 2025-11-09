@@ -4,7 +4,7 @@
 $ModulePath = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Load core helper modules first (other functions depend on them)
-$coreModules = @('ErrorHandling.ps1', 'SecurityHelpers.ps1', 'ValidationHelpers.ps1')
+$coreModules = @('ErrorHandling.ps1', 'SecurityHelpers.ps1', 'ValidationHelpers.ps1', 'DataMigration.ps1')
 foreach ($coreModule in $coreModules) {
     $modulePath = Join-Path $ModulePath "functions\$coreModule"
     if (Test-Path $modulePath) {
