@@ -56,7 +56,7 @@ function Search-Emoji {
     )
 
     # Validate emoji data is loaded
-    Test-EmojiDataLoaded -ThrowOnError
+    [void](Test-EmojiDataLoaded -ThrowOnError)
 
     # Check cache first (Phase 1 optimization)
     if (Get-Command Get-CachedSearchResult -ErrorAction SilentlyContinue) {

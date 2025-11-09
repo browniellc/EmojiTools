@@ -45,7 +45,7 @@ function Get-Emoji {
     )
 
     # Validate emoji data is loaded
-    Test-EmojiDataLoaded -ThrowOnError
+    [void](Test-EmojiDataLoaded -ThrowOnError)
 
     $results = $Script:EmojiData
 
