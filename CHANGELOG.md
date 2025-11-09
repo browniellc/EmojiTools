@@ -8,11 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.18.3] - 2025-11-09
+
+### Fixed
+- **CRITICAL**: Fixed `Test-EmojiDataLoaded` return value leaking to output in `Search-Emoji` and `Get-Emoji`
+  - Wrapped validation calls with `[void]()` to suppress boolean return value
+  - This was the actual source of "True" appearing before results (v1.18.2 fix was incomplete)
+
 ## [1.18.2] - 2025-11-09
 
 ### Fixed
 - **Output Stream**: Fixed boolean value leakage in `Search-Emoji` that displayed "True" before results
   - Explicitly converted `$wordMatch` to boolean to prevent pipeline output contamination
+  - NOTE: This fixed a potential issue but was not the source of the reported "True" output
 - **Output Stream**: Fixed identical boolean value leakage in `Copy-Emoji` search functionality
   - Applied same fix to prevent "True" appearing before emoji copy operation
 
