@@ -42,10 +42,6 @@ function Register-EmojiSource {
                 if ($_ -notmatch '^https?://') {
                     throw "URL must be HTTP or HTTPS"
                 }
-                # Warn if HTTP is used (not throw, just warn)
-                if ($_ -match '^http://') {
-                    Write-Warning "Using insecure HTTP URL. Consider using HTTPS for security."
-                }
                 # Check for path traversal and malicious patterns
                 $suspiciousPatterns = @('..', '%00', '<', '>', 'javascript:', 'data:', 'file:', 'vbscript:')
                 foreach ($pattern in $suspiciousPatterns) {
@@ -64,6 +60,11 @@ function Register-EmojiSource {
         [Parameter(Mandatory = $false)]
         [string]$Description
     )
+
+    # Warn if HTTP is used (moved here so -WarningVariable can capture it)
+    if ($Url -match '^http://') {
+        Write-Warning "Using insecure HTTP URL. Consider using HTTPS for security."
+    }
 
     # Get module data path
     $ModulePath = Split-Path -Parent (Split-Path -Parent $PSCommandPath)
