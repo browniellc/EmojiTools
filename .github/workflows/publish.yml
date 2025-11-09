@@ -121,5 +121,6 @@ jobs:
             Published to PowerShell Gallery
             
             Install with: `Install-Module -Name EmojiTools`
+            Update with: `Update-Module -Name EmojiTools`
           draft: false
           prerelease: false

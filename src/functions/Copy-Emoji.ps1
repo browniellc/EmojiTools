@@ -95,7 +95,7 @@ function Copy-Emoji {
                     $nameMatch = $_.name -like $pattern
                     $keywordMatch = $_.keywords -like $pattern
                     $words = $_.name -split '\s+'
-                    $wordMatch = $words | Where-Object { $_ -like $pattern }
+                    $wordMatch = [bool]($words | Where-Object { $_ -like $pattern })
                     $nameMatch -or $keywordMatch -or $wordMatch
                 }
 
