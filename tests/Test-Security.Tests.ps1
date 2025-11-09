@@ -189,10 +189,11 @@ Describe "Register-EmojiSource Security" -Tag "Security", "Sources" {
         It "Should reject HTTP URLs" {
             # HTTP URLs are accepted with a warning (not thrown). Test expectations should match actual behavior.
             { Register-EmojiSource -Name $testSourceName -Url "http://insecure.com/data.csv" -WarningAction SilentlyContinue } | Should -Not -Throw
-            # Verify warning is issued
-            $warnings = @()
-            Register-EmojiSource -Name "$testSourceName-warn" -Url "http://insecure.com/data.csv" -WarningVariable warnings 3>$null
-            $warnings -like "*HTTP*" | Should -Not -BeNullOrEmpty
+            # Verify warning is issued - use proper warning variable syntax
+            $warnings = $null
+            Register-EmojiSource -Name "$testSourceName-warn" -Url "http://insecure.com/data.csv" -WarningVariable +warnings -WarningAction SilentlyContinue
+            $warnings | Should -Not -BeNullOrEmpty
+            $warnings | Should -BeLike "*HTTP*"
             Unregister-EmojiSource -Name "$testSourceName-warn" -Force -ErrorAction SilentlyContinue
         }
 

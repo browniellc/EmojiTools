@@ -202,7 +202,9 @@ function ConvertFrom-SecureApiKey {
 
     try {
         $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureApiKey)
-        return [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($bstr)
+        # Use PtrToStringUni explicitly for cross-platform compatibility
+        # SecureString always uses UTF-16 (Unicode) encoding
+        return [System.Runtime.InteropServices.Marshal]::PtrToStringUni($bstr)
     }
     finally {
         if ($bstr -ne [IntPtr]::Zero) {
