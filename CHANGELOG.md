@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 
+## [1.18.2] - 2025-11-09
+
+### Fixed
+- **Output Stream**: Fixed boolean value leakage in `Search-Emoji` that displayed "True" before results
+  - Explicitly converted `$wordMatch` to boolean to prevent pipeline output contamination
+- **Output Stream**: Fixed identical boolean value leakage in `Copy-Emoji` search functionality
+  - Applied same fix to prevent "True" appearing before emoji copy operation
+
+### Changed
+- **CI/CD**: Enhanced GitHub release notes to include update instructions alongside install command
+
+
 ## [1.18.1] - 2025-11-09
 
 ### Fixed
