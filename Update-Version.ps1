@@ -28,7 +28,7 @@
     .\Update-Version.ps1 -NewVersion "1.18.0" -ReleaseDate "2025-11-09" -ChangelogNotes @"
     ### Added
     - New security validation features
-    
+
     ### Fixed
     - PSScriptAnalyzer warnings resolved
     "@
@@ -92,7 +92,8 @@ $changelogContent = Get-Content $changelogPath -Raw
 # Check if version already exists
 if ($changelogContent -match "\[${NewVersion}\]") {
     Write-Warning "Version $NewVersion already exists in CHANGELOG.md"
-} else {
+}
+else {
     # Prepare changelog entry
     $changelogEntry = @"
 ## [$NewVersion] - $ReleaseDate
@@ -113,17 +114,18 @@ $ChangelogNotes
 if (-not $SkipGitTag) {
     Write-Host ""
     Write-Host "🏷️  Creating git tag..." -ForegroundColor Yellow
-    
+
     $tagName = "v$NewVersion"
     $tagMessage = "Release version $NewVersion"
-    
+
     if ($PSCmdlet.ShouldProcess($tagName, "Create git tag")) {
         try {
             # Check if tag already exists
             $existingTag = git tag -l $tagName 2>$null
             if ($existingTag) {
                 Write-Warning "Git tag $tagName already exists"
-            } else {
+            }
+            else {
                 git tag -a $tagName -m $tagMessage
                 Write-Host "   ✅ Created git tag: $tagName" -ForegroundColor Green
                 Write-Host "   💡 Push with: git push origin $tagName" -ForegroundColor Cyan
@@ -152,7 +154,8 @@ Write-Host "  2. Commit changes: git add -A && git commit -m 'Release v$NewVersi
 if (-not $SkipGitTag) {
     Write-Host "  3. Push tag: git push origin v$NewVersion" -ForegroundColor Cyan
     Write-Host "  4. Push commits: git push origin master" -ForegroundColor Cyan
-} else {
+}
+else {
     Write-Host "  3. Push commits: git push origin master" -ForegroundColor Cyan
 }
 Write-Host ""

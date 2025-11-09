@@ -7,7 +7,7 @@ BeforeAll {
     # Import the module
     $modulePath = Split-Path -Parent (Split-Path -Parent $PSCommandPath)
     Import-Module "$modulePath\src\EmojiTools.psd1" -Force
-    
+
     # Dot-source the SecurityHelpers functions (internal functions not exported)
     . "$modulePath\src\functions\SecurityHelpers.ps1"
 }

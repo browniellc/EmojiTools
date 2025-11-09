@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [1.18.1] - 2025-11-09
+
+### Fixed
+- **Critical**: Fixed variable name collision in module loader that prevented core modules from loading
+  - `SecurityHelpers.ps1`, `ValidationHelpers.ps1`, and `DataMigration.ps1` now load correctly
+  - Resolves "Initialize-EmojiToolsDataDirectory not recognized" errors
+- **Cross-Platform**: Fixed `ConvertFrom-SecureApiKey` returning only first character on macOS/Linux
+  - Changed from `PtrToStringAuto` to `PtrToStringUni` for proper UTF-16 handling
+- **API**: Fixed HTTP warning in `Register-EmojiSource` to properly propagate to `-WarningVariable`
+  - Moved warning from parameter validation to function body for proper capture
+
+
 ## [1.18.0] - 2025-11-09
 
 ### Added
@@ -46,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 - Created comprehensive TDD refactoring summary documents
   - Phase 1: Security & Error Handling foundations
-  - Phase 2: Validation & business logic improvements  
+  - Phase 2: Validation & business logic improvements
   - Phase 3: Code quality & design patterns
   - Test fixes and improvements summary
 
