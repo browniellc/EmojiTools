@@ -32,42 +32,26 @@ function Get-Emoji {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$Category,
 
         [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$Collection,
 
         [Parameter(Mandatory = $false)]
+        [ValidateRange(0, [int]::MaxValue)]
         [int]$Limit = 0
     )
 
-    if ($null -eq $Script:EmojiData -or $Script:EmojiData.Count -eq 0) {
-        Write-Warning "No emoji data loaded. Run Update-EmojiDataset to download the emoji data."
-        return
-    }
+    # Validate emoji data is loaded
+    Test-EmojiDataLoaded -ThrowOnError
 
     $results = $Script:EmojiData
 
-    # Filter by collection if specified (using cached collections - Phase 1)
+    # Filter by collection if specified
     if ($Collection) {
-        # Use cached collections
-        if (Get-Command Get-CachedCollections -ErrorAction SilentlyContinue) {
-            $collections = Get-CachedCollections
-        }
-        else {
-            $collectionsPath = Join-Path $PSScriptRoot "..\data\collections.json"
-            if (-not (Test-Path $collectionsPath)) {
-                Write-Error "No collections found. Run Initialize-EmojiCollections to create default collections."
-                return
-            }
-            $collections = Get-Content $collectionsPath -Encoding UTF8 | ConvertFrom-Json -AsHashtable
-        }
-
-        if (-not $collections.ContainsKey($Collection)) {
-            Write-Error "Collection '$Collection' not found. Run Get-EmojiCollection to see available collections."
-            return
-        }
-
+        $collections = Get-CollectionData -CollectionName $Collection -ThrowOnNotFound
         $collectionEmojis = $collections[$Collection].emojis
         $results = $results | Where-Object { $collectionEmojis -contains $_.emoji }
     }
@@ -102,11 +86,5 @@ function Get-Emoji {
     }
 
     # Return formatted results
-    # Add extra spacing after emoji to compensate for display width variance
-    $results | Select-Object `
-    @{Name = 'Emoji'; Expression = { "$($_.emoji)   " } }, `
-    @{Name = 'Name'; Expression = { $_.name.Trim() } }, `
-    @{Name = 'Category'; Expression = { $_.category } }, `
-    @{Name = 'Keywords'; Expression = { $_.keywords } } |
-        Format-Table -AutoSize
+    Format-EmojiOutput -Emojis $results -IncludeKeywords
 }

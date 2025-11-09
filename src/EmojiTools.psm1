@@ -3,8 +3,23 @@
 
 $ModulePath = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# Load all function files first (including DataMigration functions)
-Get-ChildItem "$ModulePath\functions" -Filter *.ps1 -ErrorAction SilentlyContinue | ForEach-Object {
+# Load core helper modules first (other functions depend on them)
+$coreModules = @('ErrorHandling.ps1', 'SecurityHelpers.ps1', 'ValidationHelpers.ps1')
+foreach ($coreModule in $coreModules) {
+    $modulePath = Join-Path $ModulePath "functions\$coreModule"
+    if (Test-Path $modulePath) {
+        try {
+            . $modulePath
+            Write-Verbose "Loaded $coreModule"
+        }
+        catch {
+            Write-Warning "Failed to load $coreModule : $_"
+        }
+    }
+}
+
+# Load all other function files
+Get-ChildItem "$ModulePath\functions" -Filter *.ps1 -ErrorAction SilentlyContinue | Where-Object { $_.Name -notin $coreModules } | ForEach-Object {
     try {
         . $_.FullName
         Write-Verbose "Loaded function: $($_.BaseName)"

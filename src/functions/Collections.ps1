@@ -26,6 +26,7 @@ function New-EmojiCollection {
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Low')]
     param(
         [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [string]$Name,
 
         [Parameter(Mandatory = $false)]
@@ -35,17 +36,22 @@ function New-EmojiCollection {
         [string[]]$Emojis = @()
     )
 
-    $collectionsPath = Join-Path $PSScriptRoot "..\data\collections.json"
+    # Validate collection name format
+    Test-ValidCollectionName -Name $Name -ThrowOnError
 
     # Load existing collections
-    $collections = @{}
-    if (Test-Path $collectionsPath) {
-        $collections = Get-Content $collectionsPath -Encoding UTF8 | ConvertFrom-Json -AsHashtable
+    $collections = Get-CollectionData
+    if ($null -eq $collections) {
+        $collections = @{}
     }
 
     # Check if collection already exists
     if ($collections.ContainsKey($Name)) {
-        Write-Error "Collection '$Name' already exists. Use Add-EmojiToCollection to add emojis."
+        $exception = [DataValidationException]::new(
+            "Collection '$Name' already exists. Use Add-EmojiToCollection to add emojis.",
+            @{ CollectionName = $Name }
+        )
+        Write-EmojiError -Exception $exception -Category ResourceExists
         return
     }
 
@@ -63,7 +69,7 @@ function New-EmojiCollection {
     }
 
     # Save collections
-    $collections | ConvertTo-Json -Depth 10 | Set-Content $collectionsPath -Encoding UTF8
+    Save-CollectionData -Collections $collections
 
     Write-Information "✅ Created collection '$Name'" -InformationAction Continue
     if ($Emojis.Count -gt 0) {
@@ -104,20 +110,8 @@ function Add-EmojiToCollection {
     )
 
     begin {
-        $collectionsPath = Join-Path $PSScriptRoot "..\data\collections.json"
-
-        if (-not (Test-Path $collectionsPath)) {
-            Write-Error "No collections found. Create one with New-EmojiCollection first."
-            return
-        }
-
-        $collections = Get-Content $collectionsPath -Encoding UTF8 | ConvertFrom-Json -AsHashtable
-
-        if (-not $collections.ContainsKey($Collection)) {
-            Write-Error "Collection '$Collection' not found."
-            return
-        }
-
+        # Validate collection exists
+        $collections = Get-CollectionData -CollectionName $Collection -ThrowOnNotFound
         $added = @()
     }
 
@@ -132,9 +126,7 @@ function Add-EmojiToCollection {
 
     end {
         if ($added.Count -gt 0) {
-            $collections[$Collection].modified = (Get-Date).ToString("yyyy-MM-dd")
-            $collections | ConvertTo-Json -Depth 10 | Set-Content $collectionsPath -Encoding UTF8
-
+            Save-CollectionData -Collections $collections -UpdateTimestamp $Collection
             Write-Information "✅ Added $($added.Count) emoji(s) to '$Collection': $($added -join ' ')" -InformationAction Continue
         }
         else {
@@ -172,19 +164,8 @@ function Remove-EmojiFromCollection {
         [string[]]$Emojis
     )
 
-    $collectionsPath = Join-Path $PSScriptRoot "..\data\collections.json"
-
-    if (-not (Test-Path $collectionsPath)) {
-        Write-Error "No collections found."
-        return
-    }
-
-    $collections = Get-Content $collectionsPath -Encoding UTF8 | ConvertFrom-Json -AsHashtable
-
-    if (-not $collections.ContainsKey($Collection)) {
-        Write-Error "Collection '$Collection' not found."
-        return
-    }
+    # Validate collection exists
+    $collections = Get-CollectionData -CollectionName $Collection -ThrowOnNotFound
 
     # ShouldProcess check
     if (-not $PSCmdlet.ShouldProcess("collection '$Collection'", "Remove emojis: $($Emojis -join ' ')")) {
@@ -200,9 +181,7 @@ function Remove-EmojiFromCollection {
     }
 
     if ($removed.Count -gt 0) {
-        $collections[$Collection].modified = (Get-Date).ToString("yyyy-MM-dd")
-        $collections | ConvertTo-Json -Depth 10 | Set-Content $collectionsPath -Encoding UTF8
-
+        Save-CollectionData -Collections $collections -UpdateTimestamp $Collection
         Write-Information "✅ Removed $($removed.Count) emoji(s) from '$Collection': $($removed -join ' ')" -InformationAction Continue
     }
     else {

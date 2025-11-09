@@ -52,6 +52,7 @@ desktop.ini
 *.user
 *.userosscache
 *.sln.docstates
+.azure/
 
 # Backup files
 *.bak

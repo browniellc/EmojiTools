@@ -40,22 +40,23 @@ function Search-Emoji {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true, Position = 0)]
+        [ValidateNotNullOrEmpty()]
         [string]$Query,
 
         [Parameter(Mandatory = $false)]
+        [ValidateNotNullOrEmpty()]
         [string]$Collection,
 
         [Parameter(Mandatory = $false)]
         [switch]$Exact,
 
         [Parameter(Mandatory = $false)]
+        [ValidateRange(0, [int]::MaxValue)]
         [int]$Limit = 0
     )
 
-    if ($null -eq $Script:EmojiData -or $Script:EmojiData.Count -eq 0) {
-        Write-Warning "No emoji data loaded. Run Update-EmojiDataset to download the emoji data."
-        return
-    }
+    # Validate emoji data is loaded
+    Test-EmojiDataLoaded -ThrowOnError
 
     # Check cache first (Phase 1 optimization)
     if (Get-Command Get-CachedSearchResult -ErrorAction SilentlyContinue) {
@@ -82,26 +83,9 @@ function Search-Emoji {
 
     $searchData = $Script:EmojiData
 
-    # Filter by collection if specified (using cached collections)
+    # Filter by collection if specified
     if ($Collection) {
-        # Use cached collections (Phase 1 optimization)
-        if (Get-Command Get-CachedCollections -ErrorAction SilentlyContinue) {
-            $collections = Get-CachedCollections
-        }
-        else {
-            $collectionsPath = Join-Path $PSScriptRoot "..\data\collections.json"
-            if (-not (Test-Path $collectionsPath)) {
-                Write-Error "No collections found. Run Initialize-EmojiCollections to create default collections."
-                return
-            }
-            $collections = Get-Content $collectionsPath -Encoding UTF8 | ConvertFrom-Json -AsHashtable
-        }
-
-        if (-not $collections.ContainsKey($Collection)) {
-            Write-Error "Collection '$Collection' not found. Run Get-EmojiCollection to see available collections."
-            return
-        }
-
+        $collections = Get-CollectionData -CollectionName $Collection -ThrowOnNotFound
         $collectionEmojis = $collections[$Collection].emojis
         $searchData = $searchData | Where-Object { $collectionEmojis -contains $_.emoji }
     }
@@ -146,7 +130,7 @@ function Search-Emoji {
 
 
     if ($results.Count -eq 0) {
-        Write-Warning "No emojis found matching '$Query'"
+        Write-EmojiWarning -Message "No emojis found matching '$Query'" -WarningCode "NO_RESULTS"
         # Track search with zero results
         if (Get-Command Write-EmojiSearch -ErrorAction SilentlyContinue) {
             Write-EmojiSearch -Query $normalizedQuery -ResultCount 0

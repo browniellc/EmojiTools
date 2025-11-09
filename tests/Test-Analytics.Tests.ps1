@@ -73,11 +73,11 @@ Describe "EmojiTools Analytics" -Tag 'Analytics' {
     Context "Clear-EmojiStats" {
 
         It "Should clear stats without error" {
-            { Clear-EmojiStats 2>&1 | Out-Null } | Should -Not -Throw
+            { Clear-EmojiStats -Force 2>&1 | Out-Null } | Should -Not -Throw
         }
 
         It "Should verify stats were cleared" {
-            Clear-EmojiStats 2>&1 | Out-Null
+            Clear-EmojiStats -Force 2>&1 | Out-Null
             { Get-EmojiStats 2>&1 | Out-Null } | Should -Not -Throw
         }
     }

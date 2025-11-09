@@ -1,4 +1,32 @@
 {
-  "custom_sources": [],
+  "custom_sources": [
+    {
+      "format": "CSV",
+      "description": "",
+      "added": "2025-11-09T15:37:01.6132975Z",
+      "last_used": null,
+      "update_count": 0,
+      "name": "SecurityTest_752101423",
+      "url": "https://evil.com/../../../etc/passwd"
+    },
+    {
+      "format": "CSV",
+      "description": "",
+      "added": "2025-11-09T15:37:28.200499Z",
+      "last_used": null,
+      "update_count": 0,
+      "name": "SecurityTest_1691141981",
+      "url": "https://evil.com/../../../etc/passwd"
+    },
+    {
+      "format": "CSV",
+      "description": "",
+      "added": "2025-11-09T15:38:41.2585099Z",
+      "last_used": null,
+      "update_count": 0,
+      "name": "SecurityTest_572312653",
+      "url": "https://evil.com/../../../etc/passwd"
+    }
+  ],
   "version": "1.0"
 }

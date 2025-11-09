@@ -30,7 +30,7 @@ function Register-EmojiSource {
         Registers a source with explicit format and description
     #>
 
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Low')]
     param(
         [Parameter(Mandatory = $true)]
         [ValidatePattern('^[a-zA-Z0-9_-]+$')]
@@ -41,6 +41,17 @@ function Register-EmojiSource {
         [ValidateScript( {
                 if ($_ -notmatch '^https?://') {
                     throw "URL must be HTTP or HTTPS"
+                }
+                # Warn if HTTP is used (not throw, just warn)
+                if ($_ -match '^http://') {
+                    Write-Warning "Using insecure HTTP URL. Consider using HTTPS for security."
+                }
+                # Check for path traversal and malicious patterns
+                $suspiciousPatterns = @('..', '%00', '<', '>', 'javascript:', 'data:', 'file:', 'vbscript:')
+                foreach ($pattern in $suspiciousPatterns) {
+                    if ($_ -like "*$pattern*") {
+                        throw "Invalid or insecure URL: $_. URL contains suspicious patterns."
+                    }
                 }
                 $true
             })]
@@ -61,7 +72,8 @@ function Register-EmojiSource {
     # Check for built-in source name conflicts
     $builtInSources = @('Kaggle', 'Unicode', 'GitHub')
     if ($builtInSources -contains $Name) {
-        Write-Error "Source name '$Name' conflicts with built-in source. Please choose a different name."
+        $exception = [DataValidationException]::new("Source name '$Name' conflicts with built-in source. Please choose a different name.", @{ Name = $Name })
+        Write-EmojiError -Exception $exception -Category InvalidArgument
         return
     }
 
@@ -81,11 +93,6 @@ function Register-EmojiSource {
         }
     }
 
-    # Warn about insecure URLs
-    if ($Url -match '^http://') {
-        Write-Warning "Using insecure HTTP URL. Consider using HTTPS for security."
-    }
-
     # Load existing sources or create new registry
     $registry = @{
         version = "1.0"
@@ -97,7 +104,7 @@ function Register-EmojiSource {
             $registry = Get-Content $sourcesPath -Raw | ConvertFrom-Json -AsHashtable
         }
         catch {
-            Write-Warning "Could not load existing sources registry. Creating new one."
+            Write-EmojiWarning -Message "Could not load existing sources registry. Creating new one." -WarningCode "REGISTRY_LOAD_FAILED"
         }
     }
 
@@ -105,7 +112,11 @@ function Register-EmojiSource {
     $existingSource = $registry.custom_sources | Where-Object { $_.name -eq $Name }
     if ($existingSource) {
         # Duplicate registration is considered an error in tests; throw to allow callers to catch
-        throw "Source '$Name' already exists. Use Unregister-EmojiSource first to replace it. Existing URL: $($existingSource.url)"
+        $exception = [DataValidationException]::new(
+            "Source '$Name' already exists. Use Unregister-EmojiSource first to replace it.",
+            @{ Name = $Name; ExistingUrl = $existingSource.url }
+        )
+        throw $exception
     }
 
     # Create new source entry
@@ -122,19 +133,21 @@ function Register-EmojiSource {
     # Add to registry
     $registry.custom_sources += $newSource
 
-    # Save registry
-    try {
-        $registry | ConvertTo-Json -Depth 10 | Set-Content $sourcesPath -Encoding UTF8
-        Write-Host "✅ Successfully registered emoji source '$Name'" -ForegroundColor Green
-        Write-Host "   URL: $Url" -ForegroundColor Cyan
-        Write-Host "   Format: $Format" -ForegroundColor Cyan
-        if ($Description) {
-            Write-Host "   Description: $Description" -ForegroundColor Cyan
+    # Save registry with WhatIf support
+    if ($PSCmdlet.ShouldProcess("Source '$Name'", "Register emoji source")) {
+        try {
+            $registry | ConvertTo-Json -Depth 10 | Set-Content $sourcesPath -Encoding UTF8
+            Write-Host "✅ Successfully registered emoji source '$Name'" -ForegroundColor Green
+            Write-Host "   URL: $Url" -ForegroundColor Cyan
+            Write-Host "   Format: $Format" -ForegroundColor Cyan
+            if ($Description) {
+                Write-Host "   Description: $Description" -ForegroundColor Cyan
+            }
+            Write-Host "`nUse: Update-EmojiDataset -Source '$Name'" -ForegroundColor Yellow
         }
-        Write-Host "`nUse: Update-EmojiDataset -Source '$Name'" -ForegroundColor Yellow
-    }
-    catch {
-        Write-Error "Failed to save source registry: $_"
+        catch {
+            Write-Error "Failed to save source registry: $_"
+        }
     }
 }
 

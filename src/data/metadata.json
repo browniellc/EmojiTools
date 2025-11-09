@@ -1,7 +1,7 @@
 {
-  "EmojiCount": 1948,
   "CategorizedCount": 1579,
-  "Source": "Unicode CLDR + emoji-test.txt",
-  "LastUpdate": "2025-11-08T16:25:02.9535965-06:00",
-  "Version": "CLDR 45 + Unicode Emoji Latest"
+  "EmojiCount": 1948,
+  "LastUpdate": "2025-11-09T09:38:24.8578134-06:00",
+  "Version": "CLDR 45 + Unicode Emoji Latest",
+  "Source": "Unicode CLDR + emoji-test.txt"
 }

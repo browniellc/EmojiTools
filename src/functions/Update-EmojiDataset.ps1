@@ -49,16 +49,26 @@ function Update-EmojiDataset {
         Update-EmojiDataset -Url "https://example.com/emojis.csv"
         Downloads from a one-time URL
     #>
-
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '', Justification = 'Converting environment variable to SecureString for secure API usage')]
     [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium', DefaultParameterSetName = 'Source')]
     param(
         [Parameter(Mandatory = $false, ParameterSetName = 'Source')]
+        [ValidateNotNullOrEmpty()]
+        [ValidateSet('Unicode', 'Kaggle', 'Custom')]
         [string]$Source = 'Unicode',
 
         [Parameter(Mandatory = $true, ParameterSetName = 'Url')]
-        [ValidateScript( {
+        [ValidateNotNullOrEmpty()]
+        [ValidateScript({
                 if ($_ -notmatch '^https?://') {
                     throw "URL must be HTTP or HTTPS"
+                }
+                # Check for path traversal and malicious patterns
+                $suspiciousPatterns = @('..', '%00', '<', '>', 'javascript:', 'data:', 'file:', 'vbscript:')
+                foreach ($pattern in $suspiciousPatterns) {
+                    if ($_ -like "*$pattern*") {
+                        throw "Invalid or insecure URL: $_. URL contains suspicious patterns."
+                    }
                 }
                 $true
             })]
@@ -69,13 +79,16 @@ function Update-EmojiDataset {
         [string]$Format,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Source')]
+        [ValidateNotNullOrEmpty()]
+        [ValidateLength(2, 10)]
         [string]$Language,
 
         [Parameter(Mandatory = $false)]
         [switch]$Force,
 
         [Parameter(Mandatory = $false)]
-        [string]$KaggleApiKey,
+        [ValidateNotNull()]
+        [SecureString]$KaggleApiKey,
 
         [Parameter(Mandatory = $false)]
         [switch]$Silent
@@ -124,9 +137,16 @@ function Update-EmojiDataset {
             }
         }
 
+        # Validate URL security
+        if (-not (Test-SecureUrl -Url $Url)) {
+            $exception = [SecurityValidationException]::new("Invalid or insecure URL provided", @{ Url = $Url })
+            Write-EmojiError -Exception $exception -Category SecurityError -Sanitize
+            return
+        }
+
         # Download from URL
         try {
-            $response = Invoke-RestMethod -Uri $Url -Method Get -ErrorAction Stop
+            $response = Invoke-SecureWebRequest -Uri $Url -Method Get -TimeoutSeconds 30 -MaxRetries 2
 
             # Process based on format
             if ($Format -eq 'JSON') {
@@ -176,7 +196,8 @@ function Update-EmojiDataset {
             }
         }
         catch {
-            Write-Error "Failed to download from URL: $_"
+            $exception = [NetworkException]::new("Failed to download from URL", @{ Url = $Url })
+            Write-EmojiError -Exception $exception -Category ConnectionError -Sanitize
             return
         }
     }
@@ -201,13 +222,15 @@ function Update-EmojiDataset {
                 return
             }
             else {
-                Write-Error "Source '$Source' not found. Available sources:"
+                $exception = [SourceNotFoundException]::new($Source)
+                Write-EmojiError -Exception $exception -Category ObjectNotFound
                 Get-EmojiSource | Format-Table Name, Type, Format -AutoSize
                 return
             }
         }
         else {
-            Write-Error "Source '$Source' not found. Use Get-EmojiSource to list available sources or Register-EmojiSource to add custom sources."
+            $exception = [SourceNotFoundException]::new($Source)
+            Write-EmojiError -Exception $exception -Category ObjectNotFound
             return
         }
     }
@@ -234,13 +257,18 @@ function Update-EmojiDataset {
 
                 # Check for Kaggle CLI or API key
                 if (-not $KaggleApiKey) {
-                    $KaggleApiKey = $env:KAGGLE_KEY
+                    # Try to get from environment variable and convert to SecureString
+                    $envKey = $env:KAGGLE_KEY
+                    if ($envKey) {
+                        $KaggleApiKey = ConvertTo-SecureString -String $envKey -AsPlainText -Force
+                        Remove-Variable -Name envKey -ErrorAction SilentlyContinue
+                    }
                 }
 
                 if (-not $KaggleApiKey -and -not (Get-Command kaggle -ErrorAction SilentlyContinue)) {
-                    Write-Warning "Kaggle API key not found and Kaggle CLI not installed."
-                    Write-Warning "Please either: 1) Install Kaggle CLI: pip install kaggle, 2) Provide API key with -KaggleApiKey parameter, 3) Set KAGGLE_KEY environment variable"
-                    Write-Warning "Falling back to GitHub source..."
+                    Write-EmojiWarning -Message "Kaggle API key not found and Kaggle CLI not installed." -WarningCode "KAGGLE_AUTH_MISSING"
+                    Write-EmojiWarning -Message "Please either: 1) Install Kaggle CLI: pip install kaggle, 2) Provide API key with -KaggleApiKey parameter (as SecureString), 3) Set KAGGLE_KEY environment variable"
+                    Write-EmojiWarning -Message "Falling back to GitHub source..."
                     Update-EmojiDataset -Source GitHub -Force:$Force
                     return
                 }
@@ -290,7 +318,7 @@ function Update-EmojiDataset {
                 $emojiTestContent = $null
                 foreach ($testUrl in $emojiTestUrls) {
                     try {
-                        $emojiTestContent = Invoke-RestMethod -Uri $testUrl -Method Get -ErrorAction Stop
+                        $emojiTestContent = Invoke-SecureWebRequest -Uri $testUrl -Method Get -TimeoutSeconds 30 -MaxRetries 2
                         Write-Verbose "Successfully downloaded emoji-test.txt from: $testUrl"
                         break
                     }
@@ -388,7 +416,7 @@ function Update-EmojiDataset {
                 foreach ($url in $unicodeUrls) {
                     try {
                         if ($url -like "*.json") {
-                            $response = Invoke-RestMethod -Uri $url -Method Get -ErrorAction Stop
+                            $response = Invoke-SecureWebRequest -Uri $url -Method Get -TimeoutSeconds 30 -MaxRetries 2
                             break
                         }
                     }
@@ -456,7 +484,7 @@ function Update-EmojiDataset {
                 }
                 $githubUrl = "https://raw.githubusercontent.com/github/gemoji/master/db/emoji.json"
 
-                $response = Invoke-RestMethod -Uri $githubUrl -Method Get
+                $response = Invoke-SecureWebRequest -Uri $githubUrl -Method Get -TimeoutSeconds 30 -MaxRetries 2
 
                 # Convert JSON to CSV format
                 $emojiList = @()
@@ -518,9 +546,10 @@ function Update-EmojiDataset {
 
     }
     catch {
-        Write-Error "Failed to update emoji dataset: $_"
+        $exception = [EmojiToolsException]::new("Failed to update emoji dataset: $($_.Exception.Message)", "UPDATE_FAILED")
+        Write-EmojiError -Exception $exception -Category InvalidOperation -Sanitize
         if (-not $Silent) {
-            Write-Host "You can manually download emoji data and place it in: $dataPath" -ForegroundColor Yellow
+            Write-Host "You can manually download emoji data from Unicode CLDR" -ForegroundColor Yellow
         }
     }
 }
